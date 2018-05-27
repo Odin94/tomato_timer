@@ -35,7 +35,7 @@ defmodule TomatoTrackerWeb.Endpoint do
   plug Plug.Session,
     store: :cookie,
     key: "_tomato_tracker_key",
-    signing_salt: "BOYOcL1Z"
+    signing_salt: "RXC3cWKw"
 
   plug TomatoTrackerWeb.Router
 

@@ -8,12 +8,3 @@ config :tomato_tracker, TomatoTrackerWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
-
-# Configure your database
-config :tomato_tracker, TomatoTracker.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
-  database: "tomato_tracker_test",
-  hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox

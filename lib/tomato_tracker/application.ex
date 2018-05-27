@@ -8,8 +8,6 @@ defmodule TomatoTracker.Application do
 
     # Define workers and child supervisors to be supervised
     children = [
-      # Start the Ecto repository
-      supervisor(TomatoTracker.Repo, []),
       # Start the endpoint when the application starts
       supervisor(TomatoTrackerWeb.Endpoint, []),
       # Start your own worker by calling: TomatoTracker.Worker.start_link(arg1, arg2, arg3)
