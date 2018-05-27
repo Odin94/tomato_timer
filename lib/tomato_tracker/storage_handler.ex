@@ -1,3 +1,4 @@
+# TODO: maybe add projects to group tasks
 defmodule StorageHandler do
   def put_task(name) do
     case get_tasks() do
@@ -5,7 +6,11 @@ defmodule StorageHandler do
         PersistentStorage.put(:data, :tasks, [name])
 
       tasks ->
-        PersistentStorage.put(:data, :tasks, [name | get_tasks])
+        new_tasks =
+          [name | tasks]
+          |> Enum.uniq()
+
+        PersistentStorage.put(:data, :tasks, new_tasks)
     end
 
     IO.inspect(get_tasks)
@@ -16,9 +21,17 @@ defmodule StorageHandler do
       nil ->
         PersistentStorage.get(:data, :tasks)
 
-      _ ->
+      name ->
         PersistentStorage.get(:data, :tasks)
-        # |> Enum.filter(filter_fun)
+        |> Enum.find(fn task_name -> name == task_name end)
     end
+  end
+
+  def put_tomato(task, timestamp \\ DateTime.utc_now()) do
+    if get_tasks(task) == nil do
+      put_task(task)
+    end
+
+    PersistentStorage.put(:data, :tomatoes, %{timestamp: timestamp, task: task})
   end
 end

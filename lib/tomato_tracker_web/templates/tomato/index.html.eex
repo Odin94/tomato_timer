@@ -1,0 +1,16 @@
+<!-- TODO: Use websockets instead of a post  -->
+
+<%= form_for @conn, tomato_path(@conn, :create), [as: :tomato, class: "form-horizontal"], fn f -> %>
+  <div class="form-group">
+      <label class="col-md-2 control-label" for="tomato_task">Task-Name</label>
+      <div class="col-md-6">
+        <%= text_input f, :task, class: "form-control" %>
+      </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-md-10 col-md-offset-2">
+      <%= submit "Add", class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>
