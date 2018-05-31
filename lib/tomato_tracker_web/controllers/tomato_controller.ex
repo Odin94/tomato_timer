@@ -2,8 +2,6 @@ defmodule TomatoTrackerWeb.TomatoController do
   use TomatoTrackerWeb, :controller
 
   def index(conn, _params) do
-    IO.inspect(StorageHandler.get_tasks())
-
     render(conn, "index.html")
   end
 
@@ -13,6 +11,7 @@ defmodule TomatoTrackerWeb.TomatoController do
 
   def create(conn, %{"tomato" => %{"task" => task}}) do
     StorageHandler.put_tomato(task)
+    IO.inspect(StorageHandler.get_tomatoes)
 
     redirect(conn, to: "/")
   end
