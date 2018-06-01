@@ -19,7 +19,7 @@ defmodule TomatoTracker.Mixfile do
   def application do
     [
       mod: {TomatoTracker.Application, []},
-      extra_applications: [:logger, :runtime_tools, :persistent_storage]
+      extra_applications: [:logger, :runtime_tools, :persistent_storage, :timex]
     ]
   end
 
@@ -38,7 +38,8 @@ defmodule TomatoTracker.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
-      {:persistent_storage, "~> 0.10.0", github: "cellulose/persistent_storage"}
+      {:persistent_storage, "~> 0.10.0", github: "cellulose/persistent_storage"},
+      {:timex, "~> 3.1"},
     ]
   end
 end

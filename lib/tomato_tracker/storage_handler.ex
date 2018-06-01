@@ -1,10 +1,26 @@
-# TODO: consider re-structuring to just one list of projects where each project contains tasks, which in turn contain tomatoes
-
 # Storage is a reversed list; list.first() is the element with the highest ID / latest element
 defmodule StorageHandler do
+  use Timex
+
+  def get_tomatoes_by_task() do
+    tomatoes = get_tomatoes()
+
+    tomatoes_by_task =
+      get_tasks()
+      |> Enum.map(fn task ->
+        Map.put(
+          task,
+          :tomatoes,
+          Enum.filter(tomatoes, fn tomato ->
+            tomato.task == task.name
+          end)
+        )
+      end)
+  end
+
   def put_project(name) do
     case get_projects() do
-      nil ->
+      [] ->
         PersistentStorage.put(:data, :projects, [%{id: 1, name: name}])
 
       projects ->
@@ -17,7 +33,7 @@ defmodule StorageHandler do
   def get_projects(name \\ nil, id \\ nil) do
     case PersistentStorage.get(:data, :projects) do
       nil ->
-        nil
+        []
 
       projects ->
         Enum.filter(projects, fn p ->
@@ -35,7 +51,7 @@ defmodule StorageHandler do
 
   def put_task(name, project) do
     case get_tasks() do
-      nil ->
+      [] ->
         PersistentStorage.put(:data, :tasks, [%{id: 1, name: name, project: project}])
 
       tasks ->
@@ -48,7 +64,7 @@ defmodule StorageHandler do
   def get_tasks(name \\ nil, id \\ nil) do
     case PersistentStorage.get(:data, :tasks) do
       nil ->
-        nil
+        []
 
       tasks ->
         Enum.filter(tasks, fn t ->
@@ -64,13 +80,15 @@ defmodule StorageHandler do
     end
   end
 
-  def put_tomato(task, summary \\ "", timestamp \\ DateTime.utc_now(), project \\ "general") do
-    if get_tasks(task) == nil do
+  def put_tomato(task, summary \\ "", timestamp \\ Timex.now(), project \\ "general") do
+    if get_tasks(task) == [] do
       put_task(task, project)
+    else
+      IO.inspect(get_tasks(task))
     end
 
     case get_tomatoes() do
-      nil ->
+      [] ->
         PersistentStorage.put(:data, :tomatoes, [
           %{
             id: 1,
@@ -93,7 +111,7 @@ defmodule StorageHandler do
   def get_tomatoes(task \\ nil, timestamp \\ nil, id \\ nil) do
     case PersistentStorage.get(:data, :tomatoes) do
       nil ->
-        nil
+        []
 
       tomatoes ->
         Enum.filter(tomatoes, fn t ->

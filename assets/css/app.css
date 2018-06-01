@@ -1,1 +1,5 @@
 /* This file is for your main application css. */
+
+.list-group-item {
+  min-height: 42px;
+}

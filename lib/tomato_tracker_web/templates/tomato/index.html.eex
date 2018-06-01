@@ -7,6 +7,20 @@
         <%= text_input f, :task, class: "form-control" %>
       </div>
   </div>
+  <div class="form-group">
+      <label class="col-md-2 control-label" for="tomato_summary">Summary</label>
+      <div class="col-md-6">
+        <%= text_input f, :summary, class: "form-control" %>
+      </div>
+  </div>
+  <div class="form-group">
+      <label class="col-md-2 control-label" for="tomato_datetime">Datetime</label>
+      <div class="col-md-6">
+        <%= text_input f, :datetime, class: "form-control", value: "" %>
+      </div>
+  </div>
+
+
 
   <div class="form-group">
     <div class="col-md-10 col-md-offset-2">
@@ -14,3 +28,23 @@
     </div>
   </div>
 <% end %>
+
+
+<!-- List of tomatoes -->
+<ul class="list-group">
+  <%= for task <- @tasks do %>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+    <%= task.name %>
+    <span class="bg-primary badge badge-pill"><%= length(task.tomatoes) %></span>
+  </li>
+  <% end %>
+</ul>
+
+<link rel="stylesheet" href="<%= static_path(@conn, "/css/flatpickr.min.css") %>">
+<script src="<%= static_path(@conn, "/js/flatpickr.min.js") %>"></script>
+<script>
+  flatpickr("#tomato_datetime", {
+    enableTime: true,
+    dateFormat: "Y-m-d H:i",
+  });
+</script>
