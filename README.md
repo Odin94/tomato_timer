@@ -4,6 +4,11 @@ A Phoenix webapp to track work in pomodoros by project/task and date.
 
 ## Setup
 
+Prerequisites:
+
+ * Install (Elixir)[https://elixir-lang.org/install.html]
+ * Install (Phoenix)[https://hexdocs.pm/phoenix/installation.html]
+
 To start the Phoenix server:
 
   * Install dependencies with `mix deps.get`
