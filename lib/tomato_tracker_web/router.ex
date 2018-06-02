@@ -17,7 +17,21 @@ defmodule TomatoTrackerWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     # automatically creates REST routes, only works if you follow RESTful conventions (/new -> new() etc.)
+    resources("/", ProjectController)
+  end
+
+  scope "/tomato", TomatoTrackerWeb do
+    pipe_through :browser # Use the default browser stack
+
+    # automatically creates REST routes, only works if you follow RESTful conventions (/new -> new() etc.)
     resources("/", TomatoController)
+  end
+
+  scope "/task", TomatoTrackerWeb do
+    pipe_through :browser # Use the default browser stack
+
+    # automatically creates REST routes, only works if you follow RESTful conventions (/new -> new() etc.)
+    resources("/", TaskController)
   end
 
   # Other scopes may use custom stacks.

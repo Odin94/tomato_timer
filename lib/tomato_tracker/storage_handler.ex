@@ -2,11 +2,45 @@
 defmodule StorageHandler do
   use Timex
 
-  def get_tomatoes_by_task() do
+  def get_tomatoes_by_task_by_project(id \\ nil, name \\ nil) do
+    tomatoes_by_task = get_tomatoes_by_task()
+
+    tomatoes_by_task_by_project =
+      get_projects()
+      |> Enum.filter(fn proj ->
+        cond do
+          (id != nil and id != proj.id) or (name != nil and name != proj.name) ->
+            false
+
+          true ->
+            true
+        end
+      end)
+      |> Enum.map(fn proj ->
+        Map.put(
+          proj,
+          :tasks,
+          Enum.filter(tomatoes_by_task, fn task ->
+            task.project == proj.name
+          end)
+        )
+      end)
+  end
+
+  def get_tomatoes_by_task(id \\ nil, name \\ nil) do
     tomatoes = get_tomatoes()
 
     tomatoes_by_task =
       get_tasks()
+      |> Enum.filter(fn task ->
+        cond do
+          (id != nil and id != task.id) or (name != nil and name != task.name) ->
+            false
+
+          true ->
+            true
+        end
+      end)
       |> Enum.map(fn task ->
         Map.put(
           task,
@@ -50,6 +84,10 @@ defmodule StorageHandler do
   end
 
   def put_task(name, project) do
+    if get_projects(project) == [] do
+      put_project(project)
+    end
+
     case get_tasks() do
       [] ->
         PersistentStorage.put(:data, :tasks, [%{id: 1, name: name, project: project}])
@@ -83,8 +121,6 @@ defmodule StorageHandler do
   def put_tomato(task, summary \\ "", timestamp \\ Timex.now(), project \\ "general") do
     if get_tasks(task) == [] do
       put_task(task, project)
-    else
-      IO.inspect(get_tasks(task))
     end
 
     case get_tomatoes() do

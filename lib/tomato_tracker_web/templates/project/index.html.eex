@@ -30,13 +30,30 @@
 <% end %>
 
 
-<!-- List of tomatoes -->
+<div class="col-md-10 col-md-offset-2">
+  <%= link "Add Project", class: "btn btn-primary", to: project_path(@conn, :new) %>
+</div>
+
+
+<!-- List of projects -->
 <ul class="list-group">
-  <%= for task <- @tasks do %>
+  <%= for project <- @projects do %>
     <li class="list-group-item d-flex justify-content-between align-items-center">
-    <%= task.name %>
-    <span class="bg-primary badge badge-pill"><%= length(task.tomatoes) %></span>
-  </li>
+      <%= project.name %>
+    </li>
+    <!-- Tasks -->
+    <%= for task <- project.tasks do %>
+      <li class="list-group-item d-flex justify-content-between align-items-center list-depth-1">
+        <%= task.name %>
+        <span class="bg-primary badge badge-pill"><%= length(task.tomatoes) %></span>
+      </li>
+      <!-- Tomatoes -->
+      <%= for tomato <- task.tomatoes do %>
+        <li class="list-group-item d-flex justify-content-between align-items-center list-depth-2">
+          <%= tomato.summary %>; <%= tomato.timestamp %>
+        </li>
+      <% end %>
+    <% end %>
   <% end %>
 </ul>
 

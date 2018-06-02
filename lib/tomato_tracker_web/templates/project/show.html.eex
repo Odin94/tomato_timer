@@ -1,0 +1,19 @@
+<h5><%= @project.name %></h5>
+
+<!-- List of tasks + tomatoes -->
+<ul class="list-group">
+  <%= for task <- @project.tasks do %>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+    <%= task.name %>
+    <span class="bg-primary badge badge-pill"><%= length(task.tomatoes) %></span>
+  </li>
+
+    <!-- Tomatoes -->
+    <%= for tomato <- task.tomatoes do %>
+      <li class="list-group-item d-flex justify-content-between align-items-center list-depth-1">
+        <%= tomato.summary %>
+      </li>
+    <% end %>
+
+  <% end %>
+</ul>

@@ -3,3 +3,11 @@
 .list-group-item {
   min-height: 42px;
 }
+
+.list-depth-1 {
+  margin-left: 20px;
+}
+
+.list-depth-2 {
+  margin-left: 40px;
+}
