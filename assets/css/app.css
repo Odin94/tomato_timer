@@ -1,5 +1,10 @@
 /* This file is for your main application css. */
 
+a {
+  color: inherit !important;
+  text-decoration: inherit !important;
+}
+
 .list-group-item {
   min-height: 42px;
 }
@@ -10,4 +15,21 @@
 
 .list-depth-2 {
   margin-left: 40px;
+}
+
+li.contains-link {
+  padding: 0;
+}
+
+li.contains-link:hover {
+  padding: 0;
+  background-color: #337ab7;
+}
+.li-link {
+  display: flex;
+  padding: 10px 15px;
+}
+
+.li-link:hover {
+  color: white !important;
 }

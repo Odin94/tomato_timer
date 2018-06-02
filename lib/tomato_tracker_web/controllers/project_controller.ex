@@ -14,11 +14,25 @@ defmodule TomatoTrackerWeb.ProjectController do
 
     conn
     |> put_flash(:info, "Created project #{name}.")
-    |> redirect(to: NavigationHistory.last_path(conn, [default: "/"]))
+    |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
   end
 
-  # TODO: move this to project-controller & make one for tasks as well
   def show(conn, %{"id" => project_id}) do
-    render(conn, "show.html", project: StorageHandler.get_tomatoes_by_task_by_project(project_id))
+    project_id = String.to_integer(project_id)
+
+    IO.inspect(project_id)
+    IO.inspect(StorageHandler.get_tomatoes_by_task_by_project(project_id))
+    IO.inspect(StorageHandler.get_tomatoes_by_task_by_project())
+
+    case StorageHandler.get_tomatoes_by_task_by_project(project_id) do
+      [] ->
+        conn
+        |> put_status(:not_found)
+        |> put_view(TomatoTrackerWeb.ErrorView)
+        |> render("404.html")
+
+      [project] ->
+        render(conn, "show.html", project: project)
+    end
   end
 end
