@@ -20,10 +20,6 @@ defmodule TomatoTrackerWeb.ProjectController do
   def show(conn, %{"id" => project_id}) do
     project_id = String.to_integer(project_id)
 
-    IO.inspect(project_id)
-    IO.inspect(StorageHandler.get_tomatoes_by_task_by_project(project_id))
-    IO.inspect(StorageHandler.get_tomatoes_by_task_by_project())
-
     case StorageHandler.get_tomatoes_by_task_by_project(project_id) do
       [] ->
         conn

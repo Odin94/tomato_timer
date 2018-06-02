@@ -28,8 +28,21 @@ li.contains-link:hover {
 .li-link {
   display: flex;
   padding: 10px 15px;
+  width: 80%;
 }
 
 .li-link:hover {
+  color: white !important;
+}
+
+.li-badge {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 5;
+  color: white;
+}
+
+.btn-primary {
   color: white !important;
 }

@@ -3,17 +3,19 @@
 <!-- List of tasks + tomatoes -->
 <ul class="list-group">
   <%= for task <- @project.tasks do %>
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-      <%= task.name %>
-    <span class="bg-primary badge badge-pill"><%= length(task.tomatoes) %></span>
+    <li class="list-group-item d-flex justify-content-between align-items-center contains-link">
+      <a data-toggle="collapse" href="#collapse-task-<%= task.id %>" class="li-link"><%= task.name %></a>
+      <span class="bg-primary badge badge-pill li-badge"><%= length(task.tomatoes) %></span>
   </li>
 
     <!-- Tomatoes -->
-    <%= for tomato <- task.tomatoes do %>
-      <li class="list-group-item d-flex justify-content-between align-items-center list-depth-1">
-        <%= tomato.summary %>
-      </li>
-    <% end %>
+    <div id="collapse-task-<%= task.id %>" class="collapse show">
+      <%= for tomato <- task.tomatoes do %>
+        <li class="list-group-item d-flex justify-content-between align-items-center list-depth-1">
+          <%= tomato.summary %>
+        </li>
+      <% end %>
+    </div>
 
   <% end %>
 </ul>
