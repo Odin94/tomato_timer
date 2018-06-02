@@ -14,7 +14,7 @@ defmodule TomatoTrackerWeb.ProjectController do
 
     conn
     |> put_flash(:info, "Created project #{name}.")
-    |> redirect(to: "/new")
+    |> redirect(to: NavigationHistory.last_path(conn, [default: "/"]))
   end
 
   # TODO: move this to project-controller & make one for tasks as well

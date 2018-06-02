@@ -40,6 +40,7 @@ defmodule TomatoTracker.Mixfile do
       {:cowboy, "~> 1.0"},
       {:persistent_storage, "~> 0.10.0", github: "cellulose/persistent_storage"},
       {:timex, "~> 3.1"},
+      {:navigation_history, "~> 0.0"},
     ]
   end
 end

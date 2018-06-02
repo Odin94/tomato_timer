@@ -8,6 +8,6 @@ defmodule TomatoTrackerWeb.TaskController do
 
     conn
     |> put_flash(:info, "Task #{name} created.")
-    |> redirect(to: "/")
+    |> redirect(to: NavigationHistory.last_path(conn, [default: "/"]))
   end
 end

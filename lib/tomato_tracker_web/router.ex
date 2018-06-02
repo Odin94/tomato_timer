@@ -7,6 +7,7 @@ defmodule TomatoTrackerWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug NavigationHistory.Tracker  # used for redirecting back to origin of request
   end
 
   pipeline :api do

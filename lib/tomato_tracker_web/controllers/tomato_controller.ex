@@ -13,6 +13,6 @@ defmodule TomatoTrackerWeb.TomatoController do
 
     conn
     |> put_flash(:info, "Tomato created.")
-    |> redirect(to: "/")
+    |> redirect(to: NavigationHistory.last_path(conn, [default: "/"]))
   end
 end
