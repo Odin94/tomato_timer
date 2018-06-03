@@ -31,4 +31,12 @@ defmodule TomatoTrackerWeb.ProjectController do
         render(conn, "show.html", project: project)
     end
   end
+
+  def update(conn, %{"id" => project_id, "project" => %{"name" => project_name}}) do
+    IO.inspect(project_name)
+
+    conn
+    |> put_flash(:info, "Updated project #{project_name}.")
+    |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
+  end
 end

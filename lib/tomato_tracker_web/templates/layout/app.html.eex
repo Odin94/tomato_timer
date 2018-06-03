@@ -35,21 +35,33 @@
     <script src="<%= static_path(@conn, "/js/bootstrap.bundle.min.js") %>"></script>
 
     <script type="text/javascript">
-      function generateEditOnClick(target, id) {
+      function generateEditOnClick(targetDataType, targetItem) {
         return function(event) {
-          alert(target);
-          alert(id);
+          console.log(targetItem)
+          console.log(targetItem.id)
           // target = tomato, task, event; grab the right one and open the right edit modal with the right default values
+          if (targetDataType === "project") {
+            $('#project-edit-modal').modal('show');
+            $('#project-edit-modal').on("shown.bs.modal", function() {
+              $('.project-modal-name').select();
+            });
+            $('#project-edit-modal-project-name').text(targetItem.name);
+            $('.project-modal-name').val(targetItem.name);
+
+            // Set form target to correct update path by fixing id
+            var oldAction = $('.project-modal-form').attr("action");
+            var index = oldAction.lastIndexOf("/");
+            var plainUrl = oldAction.substr(0, index);
+            $('.project-modal-form').attr("action", plainUrl + "/" + targetItem.id);
+          }
 
           event.stopPropagation();
           event.preventDefault();
         };
       }
 
-      function generateDeleteOnClick(target, id) {
+      function generateDeleteOnClick(targetDataType, id) {
         return function(event) {
-          alert(target);
-          alert(id);
           // send delete request for target+id
 
           event.stopPropagation();

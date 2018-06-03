@@ -5,7 +5,7 @@
         <a href="/<%= project.id %>"class="list-group-item list-group-item-action clearfix">
           <%= project.name %>
 
-          <%= render TomatoTrackerWeb.SharedView, "_list_buttons.html", target: "project", id: project.id %>
+          <%= render TomatoTrackerWeb.SharedView, "_list_buttons.html", targetDataType: "project", targetItemJSON: Poison.encode!(%{id: project.id, name: project.name}) %>
         </a>
         <!-- Tasks -->
         <%= for task <- project.tasks do %>

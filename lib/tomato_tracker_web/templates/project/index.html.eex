@@ -37,6 +37,9 @@
 <!-- List of projects -->
 <%= render TomatoTrackerWeb.SharedView, "_projects.html", assigns %>
 
+<!-- Modals -->
+<%= render TomatoTrackerWeb.SharedView, "_project_edit_modal.html", assigns %>
+
 <link rel="stylesheet" href="<%= static_path(@conn, "/css/flatpickr.min.css") %>">
 <script src="<%= static_path(@conn, "/js/flatpickr.min.js") %>"></script>
 <script>

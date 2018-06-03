@@ -1,17 +1,21 @@
 <!-- Generate-Functions are declared in layout > app.html -->
 
+<!-- Delete Button -->
 <span class="float-right">
-  <span class="btn btn-xs btn-default delete-button" onclick="generateDeleteOnClick('<%= @target %>', <%= @id %>)(event)">
+  <!-- Looks like the JSON is automatically turned into a JS object -->
+  <span class="btn btn-xs btn-default delete-button" onclick="generateDeleteOnClick('<%= @targetDataType %>', <%= @targetItemJSON %>)(event)">
       <i class="far fa-trash-alt text-danger"></i>
   </span>
 </span>
 
+<!-- Edit Button -->
 <span class="float-right">
-  <span class="btn btn-xs btn-default edit-button" onclick="generateEditOnClick('<%= @target %>', <%= @id %>)(event)">
+  <span class="btn btn-xs btn-default edit-button" onclick="generateEditOnClick('<%= @targetDataType %>', <%= @targetItemJSON %>)(event)">
     <i class="far fa-edit text-warning"></i>
   </span>
 </span>
 
+<!-- Collapse Button -->
 <span class="float-right">
   <span class="btn btn-xs btn-default collapse-button" onclick="$(this).find('.far').toggleClass('fa-caret-square-right fa-caret-square-down'); event.preventDefault(); event.stopPropagation();">
     <i class="far fa-caret-square-down"></i>
