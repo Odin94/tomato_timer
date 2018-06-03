@@ -9,6 +9,7 @@
 
     <title>Hello TomatoTracker!</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link rel="stylesheet" href="/css/fontawesome-all.min.css">
   </head>
 
   <body>
@@ -32,5 +33,29 @@
     </div> <!-- /container -->
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
     <script src="<%= static_path(@conn, "/js/bootstrap.bundle.min.js") %>"></script>
+
+    <script type="text/javascript">
+      function generateEditOnClick(target, id) {
+        return function(event) {
+          alert(target);
+          alert(id);
+          // target = tomato, task, event; grab the right one and open the right edit modal with the right default values
+
+          event.stopPropagation();
+          event.preventDefault();
+        };
+      }
+
+      function generateDeleteOnClick(target, id) {
+        return function(event) {
+          alert(target);
+          alert(id);
+          // send delete request for target+id
+
+          event.stopPropagation();
+          event.preventDefault();
+        };
+      }
+    </script>
   </body>
 </html>
