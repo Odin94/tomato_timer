@@ -5,6 +5,10 @@ a {
   text-decoration: inherit !important;
 }
 
+section {
+  margin-bottom: 60px;
+}
+
 .list-group-item {
   min-height: 42px;
 }

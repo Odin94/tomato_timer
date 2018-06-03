@@ -1,0 +1,23 @@
+<!-- List of projects -->
+<section id="project-list">
+  <ul class="list-group">
+    <%= for project <- @projects do %>
+        <li class="list-group-item d-flex justify-content-between align-items-center contains-link">
+          <a href="/<%= project.id %>" class="li-link"><%= project.name %></a>
+        </li>
+        <!-- Tasks -->
+        <%= for task <- project.tasks do %>
+          <li class="list-group-item d-flex justify-content-between align-items-center list-depth-1">
+            <%= task.name %>
+            <span class="bg-primary badge badge-pill li-badge"><%= length(task.tomatoes) %></span>
+          </li>
+          <!-- Tomatoes -->
+          <%= for tomato <- task.tomatoes do %>
+            <li class="list-group-item d-flex justify-content-between align-items-center list-depth-2">
+              <%= tomato.summary %>; <%= tomato.timestamp %>
+            </li>
+          <% end %>
+        <% end %>
+    <% end %>
+  </ul>
+</section>
