@@ -21,7 +21,7 @@ defmodule StorageHandler do
           proj,
           :tasks,
           Enum.filter(tomatoes_by_task, fn task ->
-            task.project == proj.name
+            task.project == proj.id
           end)
         )
       end)
@@ -46,7 +46,7 @@ defmodule StorageHandler do
           task,
           :tomatoes,
           Enum.filter(tomatoes, fn tomato ->
-            tomato.task == task.name
+            tomato.task == task.id
           end)
         )
       end)
@@ -115,18 +115,14 @@ defmodule StorageHandler do
     end
   end
 
-  def put_task(name, project) do
-    if get_projects(project) == [] do
-      put_project(project)
-    end
-
+  def put_task(name, project_id) do
     case get_tasks() do
       [] ->
-        PersistentStorage.put(:data, :tasks, [%{id: 1, name: name, project: project}])
+        PersistentStorage.put(:data, :tasks, [%{id: 1, name: name, project: project_id}])
 
       tasks ->
         # TODO: consider not allowing duplicate names
-        new_tasks = [%{id: List.first(tasks).id + 1, name: name, project: project} | tasks]
+        new_tasks = [%{id: List.first(tasks).id + 1, name: name, project: project_id} | tasks]
         PersistentStorage.put(:data, :tasks, new_tasks)
     end
   end
@@ -151,17 +147,13 @@ defmodule StorageHandler do
     end
   end
 
-  def put_tomato(task, summary \\ "", timestamp \\ Timex.now(), project \\ "general") do
-    if get_tasks(task) == [] do
-      put_task(task, project)
-    end
-
+  def put_tomato(task_id, summary \\ "", timestamp \\ Timex.now()) do
     case get_tomatoes() do
       [] ->
         PersistentStorage.put(:data, :tomatoes, [
           %{
             id: 1,
-            task: task,
+            task: task_id,
             summary: summary,
             timestamp: timestamp
           }
@@ -169,7 +161,7 @@ defmodule StorageHandler do
 
       tomatoes ->
         new_tomatoes = [
-          %{id: List.first(tomatoes).id + 1, task: task, summary: summary, timestamp: timestamp}
+          %{id: List.first(tomatoes).id + 1, task: task_id, summary: summary, timestamp: timestamp}
           | tomatoes
         ]
 
