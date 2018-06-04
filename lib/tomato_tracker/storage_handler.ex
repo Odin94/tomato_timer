@@ -52,6 +52,25 @@ defmodule StorageHandler do
       end)
   end
 
+  def get_projects(name \\ nil, id \\ nil) do
+    case PersistentStorage.get(:data, :projects) do
+      nil ->
+        []
+
+      projects ->
+        Enum.filter(projects, fn p ->
+          cond do
+            # TODO: is there a better way to express this conditional? Doesn't look too pretty
+            (name != nil and p.name != name) or (id != nil and p.id != id) ->
+              false
+
+            true ->
+              true
+          end
+        end)
+    end
+  end
+
   def put_project(name) do
     case get_projects() do
       [] ->
@@ -64,16 +83,29 @@ defmodule StorageHandler do
     end
   end
 
-  def get_projects(name \\ nil, id \\ nil) do
-    case PersistentStorage.get(:data, :projects) do
+  def update_project(id, new_name) do
+    new_projects =
+      Enum.map(get_projects(), fn proj ->
+        if proj.id == id do
+          %{proj | name: new_name}
+        else
+          proj
+        end
+      end)
+
+    PersistentStorage.put(:data, :projects, new_projects)
+  end
+
+  def get_tasks(name \\ nil, id \\ nil) do
+    case PersistentStorage.get(:data, :tasks) do
       nil ->
         []
 
-      projects ->
-        Enum.filter(projects, fn p ->
+      tasks ->
+        Enum.filter(tasks, fn t ->
           cond do
             # TODO: is there a better way to express this conditional? Doesn't look too pretty
-            (name != nil and p.name != name) or (id != nil and p.id != id) ->
+            (name != nil and t.name != name) or (id != nil and t.id != id) ->
               false
 
             true ->
@@ -99,16 +131,17 @@ defmodule StorageHandler do
     end
   end
 
-  def get_tasks(name \\ nil, id \\ nil) do
-    case PersistentStorage.get(:data, :tasks) do
+  def get_tomatoes(task \\ nil, timestamp \\ nil, id \\ nil) do
+    case PersistentStorage.get(:data, :tomatoes) do
       nil ->
         []
 
-      tasks ->
-        Enum.filter(tasks, fn t ->
+      tomatoes ->
+        Enum.filter(tomatoes, fn t ->
           cond do
             # TODO: is there a better way to express this conditional? Doesn't look too pretty
-            (name != nil and t.name != name) or (id != nil and t.id != id) ->
+            (task != nil and t.task != task) or (timestamp != nil and t.timestamp != timestamp) or
+                (id != nil and t.id != id) ->
               false
 
             true ->
@@ -141,26 +174,6 @@ defmodule StorageHandler do
         ]
 
         PersistentStorage.put(:data, :tomatoes, new_tomatoes)
-    end
-  end
-
-  def get_tomatoes(task \\ nil, timestamp \\ nil, id \\ nil) do
-    case PersistentStorage.get(:data, :tomatoes) do
-      nil ->
-        []
-
-      tomatoes ->
-        Enum.filter(tomatoes, fn t ->
-          cond do
-            # TODO: is there a better way to express this conditional? Doesn't look too pretty
-            (task != nil and t.task != task) or (timestamp != nil and t.timestamp != timestamp) or
-                (id != nil and t.id != id) ->
-              false
-
-            true ->
-              true
-          end
-        end)
     end
   end
 end

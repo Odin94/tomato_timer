@@ -32,11 +32,12 @@ defmodule TomatoTrackerWeb.ProjectController do
     end
   end
 
-  def update(conn, %{"id" => project_id, "project" => %{"name" => project_name}}) do
-    IO.inspect(project_name)
+  def update(conn, %{"id" => project_id, "project" => %{"name" => new_project_name}}) do
+    project_id = String.to_integer(project_id)
+    StorageHandler.update_project(project_id, new_project_name)
 
     conn
-    |> put_flash(:info, "Updated project #{project_name}.")
+    |> put_flash(:info, "Updated project #{new_project_name}.")
     |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
   end
 end
