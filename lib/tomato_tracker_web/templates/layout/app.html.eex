@@ -71,11 +71,10 @@
               xhr.setRequestHeader('X-CSRF-Token', window.csrf_token)
           },
           success: function(data, textStatus) {
-            console.log(data);
-            if (data.redirect) {
-              // data.redirect contains the string URL to redirect to
-              window.location.href = data.redirect;
-            }
+            // replace current html with rendered data
+            document.open('text/html');
+            document.write(data);
+            document.close();
           },
           error: function(req, err) {
             console.log(err, req);

@@ -2,7 +2,12 @@ defmodule TomatoTrackerWeb.ProjectController do
   use TomatoTrackerWeb, :controller
 
   def index(conn, _params) do
-    render(conn, "index.html", projects: StorageHandler.get_tomatoes_by_task_by_project(), tasks: StorageHandler.get_tasks())
+    render(
+      conn,
+      "index.html",
+      projects: StorageHandler.get_tomatoes_by_task_by_project(),
+      tasks: StorageHandler.get_tasks()
+    )
   end
 
   def new(conn, _params) do
@@ -47,6 +52,8 @@ defmodule TomatoTrackerWeb.ProjectController do
 
     conn
     |> put_flash(:info, "Deleted project #{project_id}.")
+    |> put_status(303)
     |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
+    # |> json(%{redirect: NavigationHistory.last_path(conn, default: "/")})
   end
 end
