@@ -5,51 +5,49 @@ defmodule StorageHandler do
   def get_tomatoes_by_task_by_project(id \\ nil, name \\ nil) do
     tomatoes_by_task = get_tomatoes_by_task()
 
-    tomatoes_by_task_by_project =
-      get_projects()
-      |> Enum.filter(fn proj ->
-        cond do
-          (id != nil and id != proj.id) or (name != nil and name != proj.name) ->
-            false
+    get_projects()
+    |> Enum.filter(fn proj ->
+      cond do
+        (id != nil and id != proj.id) or (name != nil and name != proj.name) ->
+          false
 
-          true ->
-            true
-        end
-      end)
-      |> Enum.map(fn proj ->
-        Map.put(
-          proj,
-          :tasks,
-          Enum.filter(tomatoes_by_task, fn task ->
-            task.project == proj.id
-          end)
-        )
-      end)
+        true ->
+          true
+      end
+    end)
+    |> Enum.map(fn proj ->
+      Map.put(
+        proj,
+        :tasks,
+        Enum.filter(tomatoes_by_task, fn task ->
+          task.project == proj.id
+        end)
+      )
+    end)
   end
 
   def get_tomatoes_by_task(id \\ nil, name \\ nil) do
     tomatoes = get_tomatoes()
 
-    tomatoes_by_task =
-      get_tasks()
-      |> Enum.filter(fn task ->
-        cond do
-          (id != nil and id != task.id) or (name != nil and name != task.name) ->
-            false
+    get_tasks()
+    |> Enum.filter(fn task ->
+      cond do
+        (id != nil and id != task.id) or (name != nil and name != task.name) ->
+          false
 
-          true ->
-            true
-        end
-      end)
-      |> Enum.map(fn task ->
-        Map.put(
-          task,
-          :tomatoes,
-          Enum.filter(tomatoes, fn tomato ->
-            tomato.task == task.id
-          end)
-        )
-      end)
+        true ->
+          true
+      end
+    end)
+    |> Enum.map(fn task ->
+      Map.put(
+        task,
+        :tomatoes,
+        Enum.filter(tomatoes, fn tomato ->
+          tomato.task == task.id
+        end)
+      )
+    end)
   end
 
   def get_projects(name \\ nil, id \\ nil) do
@@ -96,6 +94,17 @@ defmodule StorageHandler do
     PersistentStorage.put(:data, :projects, new_projects)
   end
 
+  def delete_project(id) do
+    delete_tasks(nil, id)
+
+    new_projects =
+      Enum.filter(get_projects(), fn proj ->
+        proj.id != id
+      end)
+
+    PersistentStorage.put(:data, :projects, new_projects)
+  end
+
   def get_tasks(name \\ nil, id \\ nil) do
     case PersistentStorage.get(:data, :tasks) do
       nil ->
@@ -125,6 +134,39 @@ defmodule StorageHandler do
         new_tasks = [%{id: List.first(tasks).id + 1, name: name, project: project_id} | tasks]
         PersistentStorage.put(:data, :tasks, new_tasks)
     end
+  end
+
+  def uppdate_task() do
+  end
+
+  def delete_tasks(id, project_id \\ nil)
+  def delete_tasks(id, project_id) when id == nil and project_id == nil, do: :err
+
+  def delete_tasks(id, project_id) do
+    new_tasks =
+      if id != nil do
+        Enum.filter(get_tasks(), fn task ->
+          if(task.id != id) do
+            true
+          else
+            delete_tomatoes(nil, id)
+            false
+          end
+        end)
+
+        # filter by project
+      else
+        Enum.filter(get_tasks(), fn task ->
+          if(task.project != project_id) do
+            true
+          else
+            delete_tomatoes(nil, id)
+            false
+          end
+        end)
+      end
+
+    PersistentStorage.put(:data, :tasks, new_tasks)
   end
 
   def get_tomatoes(task \\ nil, timestamp \\ nil, id \\ nil) do
@@ -161,11 +203,36 @@ defmodule StorageHandler do
 
       tomatoes ->
         new_tomatoes = [
-          %{id: List.first(tomatoes).id + 1, task: task_id, summary: summary, timestamp: timestamp}
+          %{
+            id: List.first(tomatoes).id + 1,
+            task: task_id,
+            summary: summary,
+            timestamp: timestamp
+          }
           | tomatoes
         ]
 
         PersistentStorage.put(:data, :tomatoes, new_tomatoes)
     end
+  end
+
+  def delete_tomatoes(id, task_id \\ nil)
+  def delete_tomatoes(id, task_id) when id == nil and task_id == nil, do: :err
+
+  def delete_tomatoes(id, task_id) do
+    new_tomatoes =
+      if id != nil do
+        Enum.filter(get_tomatoes(), fn tomato ->
+          tomato.id != id
+        end)
+
+        # filter by task
+      else
+        Enum.filter(get_tomatoes(), fn tomato ->
+          tomato.task != task_id
+        end)
+      end
+
+    PersistentStorage.put(:data, :tomatoes, new_tomatoes)
   end
 end

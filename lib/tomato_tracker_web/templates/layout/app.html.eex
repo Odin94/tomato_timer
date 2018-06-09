@@ -62,13 +62,12 @@
       }
 
       function deleteThing(url) {
-        console.log(url);
         if (url === "/") alert("WAT")
         $.ajax({
           url: url,
           type: 'delete',
           beforeSend: function (xhr) {
-              xhr.setRequestHeader('X-CSRF-Token', window.csrf_token)
+              xhr.setRequestHeader('X-CSRF-Token', window.csrf_token);
           },
           success: function(data, textStatus) {
             // replace current html with rendered data

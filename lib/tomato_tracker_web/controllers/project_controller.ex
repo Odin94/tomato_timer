@@ -48,7 +48,7 @@ defmodule TomatoTrackerWeb.ProjectController do
 
   def delete(conn, %{"id" => project_id}) do
     project_id = String.to_integer(project_id)
-    IO.puts("delete!")
+    StorageHandler.delete_project(project_id)
 
     conn
     |> put_flash(:info, "Deleted project #{project_id}.")
