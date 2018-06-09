@@ -40,4 +40,13 @@ defmodule TomatoTrackerWeb.ProjectController do
     |> put_flash(:info, "Updated project #{new_project_name}.")
     |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
   end
+
+  def delete(conn, %{"id" => project_id}) do
+    project_id = String.to_integer(project_id)
+    IO.puts("delete!")
+
+    conn
+    |> put_flash(:info, "Deleted project #{project_id}.")
+    |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
+  end
 end

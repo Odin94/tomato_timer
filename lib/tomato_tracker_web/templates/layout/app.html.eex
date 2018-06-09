@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Hello TomatoTracker!</title>
+    <title>TomatoTracker</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
     <link rel="stylesheet" href="/css/fontawesome-all.min.css">
   </head>
@@ -20,7 +20,9 @@
             <li><a href="http://www.phoenixframework.org/docs">Get Started</a></li>
           </ul>
         </nav>
-        <span class="logo"></span>
+        <a href="/">
+          <span class="logo"></span>
+        </a>
       </header>
 
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
@@ -33,12 +35,11 @@
     </div> <!-- /container -->
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
     <script src="<%= static_path(@conn, "/js/bootstrap.bundle.min.js") %>"></script>
+    <script src="<%= static_path(@conn, "/js/sweetalert.min.js") %>"></script>
 
     <script type="text/javascript">
       function generateEditOnClick(targetDataType, targetItem) {
         return function(event) {
-          console.log(targetItem)
-          console.log(targetItem.id)
           // target = tomato, task, event; grab the right one and open the right edit modal with the right default values
           if (targetDataType === "project") {
             $('#project-edit-modal').modal('show');
@@ -60,14 +61,86 @@
         };
       }
 
-      function generateDeleteOnClick(targetDataType, id) {
-        return function(event) {
-          // send delete request for target+id
+      function deleteThing(url) {
+        console.log(url);
+        if (url === "/") alert("WAT")
+        $.ajax({
+          url: url,
+          type: 'delete',
+          beforeSend: function (xhr) {
+              xhr.setRequestHeader('X-CSRF-Token', window.csrf_token)
+          },
+          success: function(data, textStatus) {
+            console.log(data);
+            if (data.redirect) {
+              // data.redirect contains the string URL to redirect to
+              window.location.href = data.redirect;
+            }
+          },
+          error: function(req, err) {
+            console.log(err, req);
+          }
+        });
+      }
 
+      function generateDeleteOnClick(targetDataType, targetItem) {
+        return function(event) {
           event.stopPropagation();
           event.preventDefault();
+
+          var id = targetItem.id;
+          var url = "";
+          var text = "This will delete ";
+          switch (targetDataType) {
+            case "project":
+              url = "<%= project_path(@conn, :delete, -1) %>".replace("-1", id);
+              text += "the project " + targetItem.name + " and all its tasks and tomatoes!";
+              break;
+
+            case "task":
+              url = "<%= task_path(@conn, :delete, -1) %>".replace("-1", id);;
+              text += "the task " + targetItem.name + " and all its tomatoes!";
+              break;
+
+            case "tomato":
+              url = "<%= tomato_path(@conn, :delete, -1) %>".replace("-1", id);
+              text += "the selected tomato!";
+              break;
+            default:
+              console.log("No matching url for datatype: " + targetDataType);
+              return;
+          }
+
+          swal({
+            title: "Are you sure?",
+            text: text,
+            icon: "warning",
+            buttons: ["keep stuff", "delete everything"],
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              if (targetDataType === "project" || targetDataType === "task") {
+                swal({
+                  title: "100% certain?",
+                  text: "No take-backs after this!",
+                  icon: "warning",
+                  buttons: ["keep stuff", "delete it!"],
+                  dangerMode: true,
+                }).then((willDelete) => {
+                  if (willDelete) deleteThing(url);
+                });
+              } else {
+                deleteThing(url);
+              }
+            }
+          });
         };
       }
+    </script>
+
+    <script type="text/javascript">
+      window.csrf_token = <%= raw Poison.encode!(Plug.CSRFProtection.get_csrf_token()) %>;
     </script>
   </body>
 </html>

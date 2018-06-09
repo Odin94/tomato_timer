@@ -23,3 +23,6 @@
     <% end %>
   </ul>
 </section>
+
+<!-- Modals -->
+<%= render TomatoTrackerWeb.SharedView, "_project_edit_modal.html", assigns %>

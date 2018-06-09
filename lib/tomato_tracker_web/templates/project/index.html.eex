@@ -4,8 +4,7 @@
   <div class="form-group row">
       <label class="col-md-2 control-label" for="tomato_task">Task-Name</label>
       <div class="col-md-6">
-        <!-- <%= text_input f, :task, class: "form-control" %> -->
-        <%= select f, :task, Enum.map(@tasks, &{&1.name, &1.id}) %>
+        <%= select f, :task, Enum.map(@tasks, &{&1.name, &1.id}), class: "form-control" %>
       </div>
   </div>
   <div class="form-group row">
@@ -37,9 +36,6 @@
 
 <!-- List of projects -->
 <%= render TomatoTrackerWeb.SharedView, "_projects.html", assigns %>
-
-<!-- Modals -->
-<%= render TomatoTrackerWeb.SharedView, "_project_edit_modal.html", assigns %>
 
 <link rel="stylesheet" href="<%= static_path(@conn, "/css/flatpickr.min.css") %>">
 <script src="<%= static_path(@conn, "/js/flatpickr.min.js") %>"></script>
