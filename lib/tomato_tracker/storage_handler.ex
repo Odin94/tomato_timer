@@ -1,4 +1,6 @@
 # Storage is a reversed list; list.first() is the element with the highest ID / latest element
+
+# TODO: Tasks aren't displayed in frontend; check if we get them in this get function, then check if frontend might be buggy
 defmodule StorageHandler do
   use Timex
 
@@ -125,6 +127,12 @@ defmodule StorageHandler do
   end
 
   def put_task(name, project_id) do
+    project_id =
+      cond do
+        is_binary(project_id) -> String.to_integer(project_id)
+        true -> project_id
+      end
+
     case get_tasks() do
       [] ->
         PersistentStorage.put(:data, :tasks, [%{id: 1, name: name, project: project_id}])
@@ -143,6 +151,7 @@ defmodule StorageHandler do
   def delete_tasks(id, project_id) when id == nil and project_id == nil, do: :err
 
   def delete_tasks(id, project_id) do
+    # filter by task-id
     new_tasks =
       if id != nil do
         Enum.filter(get_tasks(), fn task ->
@@ -160,7 +169,8 @@ defmodule StorageHandler do
           if(task.project != project_id) do
             true
           else
-            delete_tomatoes(nil, id)
+            IO.puts("delete tomatoes!!!!!!!!!!")
+            delete_tomatoes(nil, task.id)
             false
           end
         end)
@@ -190,6 +200,12 @@ defmodule StorageHandler do
   end
 
   def put_tomato(task_id, summary \\ "", timestamp \\ Timex.now()) do
+    task_id =
+      cond do
+        is_binary(task_id) -> String.to_integer(task_id)
+        true -> task_id
+      end
+
     case get_tomatoes() do
       [] ->
         PersistentStorage.put(:data, :tomatoes, [

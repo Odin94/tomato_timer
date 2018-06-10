@@ -21,8 +21,7 @@
     <div class="form-group row">
         <label class="col-md-2 control-label" for="task_project">Project-Name</label>
         <div class="col-md-6">
-          <!-- <%= text_input f, :project, class: "form-control" %> -->
-          <%= select f, :task, Enum.map(@projects, &{&1.name, &1.id}), class: "form-control" %>
+          <%= select f, :project, Enum.map(@projects, &{&1.name, &1.id}), class: "form-control" %>
         </div>
     </div>
     <div class="form-group row">
