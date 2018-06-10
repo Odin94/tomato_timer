@@ -249,6 +249,7 @@ defmodule StorageHandler do
         end)
       end
 
+    IO.inspect(new_tomatoes)
     PersistentStorage.put(:data, :tomatoes, new_tomatoes)
   end
 end

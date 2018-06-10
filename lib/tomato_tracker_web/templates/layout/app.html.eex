@@ -37,104 +37,105 @@
     <script src="<%= static_path(@conn, "/js/bootstrap.bundle.min.js") %>"></script>
     <script src="<%= static_path(@conn, "/js/sweetalert.min.js") %>"></script>
 
+    <!-- Can't be inside a js file because we need the <\%= templating \%> -->
     <script type="text/javascript">
-      function generateEditOnClick(targetDataType, targetItem) {
-        return function(event) {
-          // target = tomato, task, event; grab the right one and open the right edit modal with the right default values
-          if (targetDataType === "project") {
-            $('#project-edit-modal').modal('show');
-            $('#project-edit-modal').on("shown.bs.modal", function() {
-              $('.project-modal-name').select();
-            });
-            $('#project-edit-modal-project-name').text(targetItem.name);
-            $('.project-modal-name').val(targetItem.name);
+    function generateEditOnClick(targetDataType, targetItem) {
+      return function(event) {
+        // target = tomato, task, event; grab the right one and open the right edit modal with the right default values
+        if (targetDataType === "project") {
+          $('#project-edit-modal').modal('show');
+          $('#project-edit-modal').on("shown.bs.modal", function() {
+            $('.project-modal-name').select();
+          });
+          $('#project-edit-modal-project-name').text(targetItem.name);
+          $('.project-modal-name').val(targetItem.name);
 
-            // Set form target to correct update path by fixing id
-            var oldAction = $('.project-modal-form').attr("action");
-            var index = oldAction.lastIndexOf("/");
-            var plainUrl = oldAction.substr(0, index);
-            $('.project-modal-form').attr("action", plainUrl + "/" + targetItem.id);
-          }
+          // Set form target to correct update path by fixing id
+          var oldAction = $('.project-modal-form').attr("action");
+          var index = oldAction.lastIndexOf("/");
+          var plainUrl = oldAction.substr(0, index);
+          $('.project-modal-form').attr("action", plainUrl + "/" + targetItem.id);
+        }
 
-          event.stopPropagation();
-          event.preventDefault();
-        };
-      }
+        event.stopPropagation();
+        event.preventDefault();
+      };
+    }
 
-      function deleteThing(url) {
-        if (url === "/") alert("WAT")
-        $.ajax({
-          url: url,
-          type: 'delete',
-          beforeSend: function (xhr) {
-              xhr.setRequestHeader('X-CSRF-Token', window.csrf_token);
-          },
-          success: function(data, textStatus) {
-            // replace current html with rendered data
-            document.open('text/html');
-            document.write(data);
-            document.close();
-          },
-          error: function(req, err) {
-            console.log(err, req);
+    function deleteThing(url) {
+      $.ajax({
+        url: url,
+        type: 'delete',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('X-CSRF-Token', window.csrf_token);
+        },
+        success: function(data, textStatus) {
+          // replace current html with rendered data
+          document.open('text/html');
+          document.write(data);
+          document.close();
+        },
+        error: function(req, err) {
+          console.log(err, req);
+        }
+      });
+    }
+
+    function generateDeleteOnClick(targetDataType, targetItem) {
+      return function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        var id = targetItem.id;
+        var url = "";
+        var text = "This will delete ";
+        switch (targetDataType) {
+          case "project":
+            url = "<%= project_path(@conn, :delete, -1) %>".replace("-1", id);
+            text += "the project " + targetItem.name + " and all its tasks and tomatoes!";
+            break;
+
+          case "task":
+            url = "<%= task_path(@conn, :delete, -1) %>".replace("-1", id);;
+            text += "the task " + targetItem.name + " and all its tomatoes!";
+            break;
+
+          case "tomato":
+            url = "<%= tomato_path(@conn, :delete, -1) %>".replace("-1", id);
+            text += "the selected tomato!";
+            break;
+          default:
+            console.log("No matching url for datatype: " + targetDataType);
+            return;
+        }
+        console.log(url)
+
+        swal({
+          title: "Are you sure?",
+          text: text,
+          icon: "warning",
+          buttons: ["keep stuff", "delete everything"],
+          dangerMode: true,
+        })
+        .then((willDelete) => {
+          if (willDelete) {
+            if (targetDataType === "project" || targetDataType === "task") {
+              swal({
+                title: "100% certain?",
+                text: "No take-backs after this!",
+                icon: "warning",
+                buttons: ["keep stuff", "delete it!"],
+                dangerMode: true,
+              }).then((willDelete) => {
+                if (willDelete) deleteThing(url);
+              });
+            } else {
+              deleteThing(url);
+            }
           }
         });
-      }
-
-      function generateDeleteOnClick(targetDataType, targetItem) {
-        return function(event) {
-          event.stopPropagation();
-          event.preventDefault();
-
-          var id = targetItem.id;
-          var url = "";
-          var text = "This will delete ";
-          switch (targetDataType) {
-            case "project":
-              url = "<%= project_path(@conn, :delete, -1) %>".replace("-1", id);
-              text += "the project " + targetItem.name + " and all its tasks and tomatoes!";
-              break;
-
-            case "task":
-              url = "<%= task_path(@conn, :delete, -1) %>".replace("-1", id);;
-              text += "the task " + targetItem.name + " and all its tomatoes!";
-              break;
-
-            case "tomato":
-              url = "<%= tomato_path(@conn, :delete, -1) %>".replace("-1", id);
-              text += "the selected tomato!";
-              break;
-            default:
-              console.log("No matching url for datatype: " + targetDataType);
-              return;
-          }
-
-          swal({
-            title: "Are you sure?",
-            text: text,
-            icon: "warning",
-            buttons: ["keep stuff", "delete everything"],
-            dangerMode: true,
-          })
-          .then((willDelete) => {
-            if (willDelete) {
-              if (targetDataType === "project" || targetDataType === "task") {
-                swal({
-                  title: "100% certain?",
-                  text: "No take-backs after this!",
-                  icon: "warning",
-                  buttons: ["keep stuff", "delete it!"],
-                  dangerMode: true,
-                }).then((willDelete) => {
-                  if (willDelete) deleteThing(url);
-                });
-              } else {
-                deleteThing(url);
-              }
-            }
-          });
-        };
-      }
+      };
+    }
     </script>
 
     <script type="text/javascript">

@@ -13,6 +13,16 @@ defmodule TomatoTrackerWeb.TomatoController do
 
     conn
     |> put_flash(:info, "Tomato created.")
-    |> redirect(to: NavigationHistory.last_path(conn, [default: "/"]))
+    |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
+  end
+
+  def delete(conn, %{"id" => tomato_id}) do
+    tomato_id = String.to_integer(tomato_id)
+    StorageHandler.delete_tomatoes(tomato_id)
+
+    conn
+    |> put_flash(:info, "Deleted tomato #{tomato_id}.")
+    |> put_status(303)
+    |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
   end
 end

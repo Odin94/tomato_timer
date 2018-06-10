@@ -54,6 +54,5 @@ defmodule TomatoTrackerWeb.ProjectController do
     |> put_flash(:info, "Deleted project #{project_id}.")
     |> put_status(303)
     |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
-    # |> json(%{redirect: NavigationHistory.last_path(conn, default: "/")})
   end
 end

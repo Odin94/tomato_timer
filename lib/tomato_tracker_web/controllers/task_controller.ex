@@ -11,4 +11,14 @@ defmodule TomatoTrackerWeb.TaskController do
     |> put_flash(:info, "Task #{name} created.")
     |> redirect(to: NavigationHistory.last_path(conn, [default: "/"]))
   end
+
+  def delete(conn, %{"id" => task_id}) do
+    task_id = String.to_integer(task_id)
+    StorageHandler.delete_tasks(task_id)
+
+    conn
+    |> put_flash(:info, "Deleted task #{task_id}.")
+    |> put_status(303)
+    |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
+  end
 end

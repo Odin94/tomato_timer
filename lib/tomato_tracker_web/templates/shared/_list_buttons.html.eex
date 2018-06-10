@@ -1,12 +1,7 @@
 <!-- Generate-Functions are declared in layout > app.html -->
 
 <!-- Delete Button -->
-<span class="float-right">
-  <!-- Looks like the JSON is automatically turned into a JS object -->
-  <span class="btn btn-xs btn-default delete-button" onclick="generateDeleteOnClick('<%= @targetDataType %>', <%= @targetItemJSON %>)(event)">
-      <i class="far fa-trash-alt text-danger"></i>
-  </span>
-</span>
+<%= render TomatoTrackerWeb.SharedView, "_delete_button.html", assigns %>
 
 <!-- Edit Button -->
 <span class="float-right">

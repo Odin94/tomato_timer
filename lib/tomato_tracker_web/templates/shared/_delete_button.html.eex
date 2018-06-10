@@ -1,0 +1,6 @@
+<span class="float-right">
+  <!-- Looks like the JSON is automatically turned into a JS object -->
+  <span class="btn btn-xs btn-default delete-button" onclick="generateDeleteOnClick('<%= @targetDataType %>', <%= @targetItemJSON %>)(event)">
+      <i class="far fa-trash-alt text-danger"></i>
+  </span>
+</span>
