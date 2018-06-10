@@ -42,20 +42,22 @@
       function generateEditOnClick(targetDataType, targetItem) {
         return function(event) {
           // target = tomato, task, event; grab the right one and open the right edit modal with the right default values
-          if (targetDataType === "project") {
-            $('#project-edit-modal').modal('show');
-            $('#project-edit-modal').on("shown.bs.modal", function() {
-              $('.project-modal-name').select();
-            });
-            $('#project-edit-modal-project-name').text(targetItem.name);
-            $('.project-modal-name').val(targetItem.name);
 
-            // Set form target to correct update path by fixing id
-            var oldAction = $('.project-modal-form').attr("action");
-            var index = oldAction.lastIndexOf("/");
-            var plainUrl = oldAction.substr(0, index);
-            $('.project-modal-form').attr("action", plainUrl + "/" + targetItem.id);
-          }
+          $('#' + targetDataType + '-edit-modal').modal('show');
+          $('#' + targetDataType + '-edit-modal').on("shown.bs.modal", function() {
+            $('.' + targetDataType + '-modal-name').select();
+            if (targetDataType === "task") {
+              $("#task_project_id").val(targetItem.project);
+            }
+          });
+          $('#' + targetDataType + '-edit-modal-' + targetDataType + '-name').text(targetItem.name);
+          $('.' + targetDataType + '-modal-name').val(targetItem.name);
+
+          // Set form target to correct update path by fixing id
+          var oldAction = $('.' + targetDataType + '-modal-form').attr("action");
+          var index = oldAction.lastIndexOf("/");
+          var plainUrl = oldAction.substr(0, index);
+          $('.' + targetDataType + '-modal-form').attr("action", plainUrl + "/" + targetItem.id);
 
           event.stopPropagation();
           event.preventDefault();

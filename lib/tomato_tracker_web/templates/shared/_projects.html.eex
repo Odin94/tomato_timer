@@ -13,7 +13,7 @@
             <a href="/<%= project.id %>" class="list-group-item list-group-item-action clearfix list-depth-1">
               <%= task.name %>
 
-              <%= render TomatoTrackerWeb.SharedView, "_list_buttons.html", targetDataType: "task", targetItemJSON: Poison.encode!(%{id: task.id, name: task.name}), targetItemId: task.id, caretClass: "fa-caret-square-right" %>
+              <%= render TomatoTrackerWeb.SharedView, "_list_buttons.html", targetDataType: "task", targetItemJSON: Poison.encode!(%{id: task.id, name: task.name, project: task.project}), targetItemId: task.id, caretClass: "fa-caret-square-right" %>
               <span class="bg-primary badge badge-pill li-badge"><%= length(task.tomatoes) %></span>
             </a>
             <!-- Tomatoes -->
@@ -34,3 +34,4 @@
 
 <!-- Modals -->
 <%= render TomatoTrackerWeb.SharedView, "_project_edit_modal.html", assigns %>
+<%= render TomatoTrackerWeb.SharedView, "_task_edit_modal.html", assigns %>

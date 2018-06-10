@@ -144,7 +144,17 @@ defmodule StorageHandler do
     end
   end
 
-  def uppdate_task() do
+  def update_task(id, new_name, new_project_id) do
+    new_tasks =
+      Enum.map(get_tasks(), fn task ->
+        if task.id == id do
+          %{task | name: new_name, project: new_project_id}
+        else
+          task
+        end
+      end)
+
+    PersistentStorage.put(:data, :tasks, new_tasks)
   end
 
   def delete_tasks(id, project_id \\ nil)

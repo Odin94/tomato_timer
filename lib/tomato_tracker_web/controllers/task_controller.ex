@@ -9,7 +9,20 @@ defmodule TomatoTrackerWeb.TaskController do
 
     conn
     |> put_flash(:info, "Task #{name} created.")
-    |> redirect(to: NavigationHistory.last_path(conn, [default: "/"]))
+    |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
+  end
+
+  def update(conn, %{
+        "id" => task_id,
+        "task" => %{"name" => new_task_name, "project_id" => new_project_id}
+      }) do
+    task_id = String.to_integer(task_id)
+    new_project_id = String.to_integer(new_project_id)
+    StorageHandler.update_task(task_id, new_task_name, new_project_id)
+
+    conn
+    |> put_flash(:info, "Updated task #{new_task_name}.")
+    |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
   end
 
   def delete(conn, %{"id" => task_id}) do
