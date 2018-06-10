@@ -108,7 +108,6 @@
             console.log("No matching url for datatype: " + targetDataType);
             return;
         }
-        console.log(url)
 
         swal({
           title: "Are you sure?",
@@ -135,6 +134,22 @@
           }
         });
       };
+    }
+
+    function collapseOnClick(self, event) {
+      var icon = $(self).find('.far');
+      if (icon.hasClass("collapsing")) return;
+
+      if($(self).hasClass('collapsed')) {
+        icon.addClass('fa-caret-square-down');
+        icon.removeClass('fa-caret-square-right');
+      } else {
+        icon.addClass('fa-caret-square-right');
+        icon.removeClass('fa-caret-square-down');
+      }
+      // $(this).find('.far').toggleClass('fa-caret-square-right fa-caret-square-down');
+
+      event.preventDefault();
     }
     </script>
 

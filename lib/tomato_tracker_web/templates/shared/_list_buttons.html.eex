@@ -12,7 +12,8 @@
 
 <!-- Collapse Button -->
 <span class="float-right">
-  <span class="btn btn-xs btn-default collapse-button" onclick="$(this).find('.far').toggleClass('fa-caret-square-right fa-caret-square-down'); event.preventDefault(); event.stopPropagation();">
+  <span data-toggle="collapse" href="#collapse-<%= @targetDataType %>-<%= @targetItemId %>" class="btn btn-xs btn-default collapse-button"
+    onclick="collapseOnClick(this, event);">
     <i class="far fa-caret-square-down"></i>
   </span>
 </span>

@@ -5,25 +5,29 @@
         <a href="/<%= project.id %>" class="list-group-item list-group-item-action clearfix">
           <%= project.name %>
 
-          <%= render TomatoTrackerWeb.SharedView, "_list_buttons.html", targetDataType: "project", targetItemJSON: Poison.encode!(%{id: project.id, name: project.name}) %>
+          <%= render TomatoTrackerWeb.SharedView, "_list_buttons.html", targetDataType: "project", targetItemJSON: Poison.encode!(%{id: project.id, name: project.name}), targetItemId: project.id %>
         </a>
         <!-- Tasks -->
-        <%= for task <- project.tasks do %>
-          <a href="/<%= project.id %>" class="list-group-item list-group-item-action clearfix list-depth-1">
-            <%= task.name %>
+        <div id="collapse-project-<%= project.id %>" class="collapse show">
+          <%= for task <- project.tasks do %>
+            <a href="/<%= project.id %>" class="list-group-item list-group-item-action clearfix list-depth-1">
+              <%= task.name %>
 
-            <%= render TomatoTrackerWeb.SharedView, "_list_buttons.html", targetDataType: "task", targetItemJSON: Poison.encode!(%{id: task.id, name: task.name}) %>
-            <span class="bg-primary badge badge-pill li-badge"><%= length(task.tomatoes) %></span>
-          </a>
-          <!-- Tomatoes -->
-          <%= for tomato <- task.tomatoes do %>
-            <a href="/<%= project.id %>" class="list-group-item list-group-item-action clearfix list-depth-2">
-              <%= tomato.summary %>; <%= tomato.timestamp %>
-
-              <%= render TomatoTrackerWeb.SharedView, "_delete_button.html", targetDataType: "tomato", targetItemJSON: Poison.encode!(%{id: tomato.id}) %>
+              <%= render TomatoTrackerWeb.SharedView, "_list_buttons.html", targetDataType: "task", targetItemJSON: Poison.encode!(%{id: task.id, name: task.name}), targetItemId: task.id %>
+              <span class="bg-primary badge badge-pill li-badge"><%= length(task.tomatoes) %></span>
             </a>
+            <!-- Tomatoes -->
+            <div id="collapse-task-<%= task.id %>" class="collapse show">
+              <%= for tomato <- task.tomatoes do %>
+                <a href="/<%= project.id %>" class="list-group-item list-group-item-action clearfix list-depth-2">
+                  <%= tomato.summary %>; <%= tomato.timestamp %>
+
+                  <%= render TomatoTrackerWeb.SharedView, "_delete_button.html", targetDataType: "tomato", targetItemJSON: Poison.encode!(%{id: tomato.id}), targetItemId: tomato.id %>
+                </a>
+              <% end %>
+            </div>
           <% end %>
-        <% end %>
+        </div>
     <% end %>
   </ul>
 </section>
