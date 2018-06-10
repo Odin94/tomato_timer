@@ -12,8 +12,7 @@
 
 <!-- Collapse Button -->
 <span class="float-right">
-  <span data-toggle="collapse" href="#collapse-<%= @targetDataType %>-<%= @targetItemId %>" class="btn btn-xs btn-default collapse-button"
-    onclick="collapseOnClick(this, event);">
-    <i class="far fa-caret-square-down"></i>
+  <span data-toggle="collapse" href="#collapse-<%= @targetDataType %>-<%= @targetItemId %>" class="btn btn-xs btn-default collapse-button" onclick="collapseOnClick(this, event);">
+    <i class="far fa-caret-square-right"></i>
   </span>
 </span>
