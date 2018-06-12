@@ -3,15 +3,17 @@
 <!-- List of tasks + tomatoes -->
 <ul class="list-group">
   <%= for task <- @project.tasks do %>
-    <li class="list-group-item d-flex justify-content-between align-items-center contains-link">
-      <a data-toggle="collapse" href="#collapse-task-<%= task.id %>" onclick="console.log(3); event.preventDefault();" class="li-link"><%= task.name %></a>
+    <li class="list-group-item clearfix">
+      <%= task.name %>
+
+      <%= render TomatoTrackerWeb.SharedView, "_list_buttons.html", targetDataType: "task", targetItemJSON: Poison.encode!(%{id: task.id, name: task.name, project: task.project}), targetItemId: task.id, caretClass: "fa-caret-square-down" %>
       <span class="bg-primary badge badge-pill li-badge"><%= length(task.tomatoes) %></span>
   </li>
 
     <!-- Tomatoes -->
     <div id="collapse-task-<%= task.id %>" class="collapse show">
       <%= for tomato <- task.tomatoes do %>
-        <li class="list-group-item d-flex justify-content-between align-items-center list-depth-1">
+        <li class="list-group-item list-depth-1 clearfix">
           <%= tomato.summary %>
         </li>
       <% end %>

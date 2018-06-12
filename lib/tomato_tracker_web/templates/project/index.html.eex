@@ -22,7 +22,7 @@
 
   <div class="form-group row">
     <div class="col-md-10 offset-md-2">
-      <%= submit "Add", class: "btn btn-primary" %>
+      <%= submit "Add", class: "btn btn-primary", id: "tomato_submit_button" %>
     </div>
   </div>
 <% end %>

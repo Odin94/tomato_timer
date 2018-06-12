@@ -151,8 +151,43 @@
         }
 
         event.preventDefault();
-    }
-    </script>
+      }
+
+      // TODO: move these into a js file
+      window.getCookie = function(name) {
+        var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        if (match) return match[2];
+      }
+
+      function setCookie(cname, cvalue, exdays) {
+        if (exdays) {
+          var d = new Date();
+          d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+          var expires = ";expires="+ d.toUTCString();
+        } else {
+          expires = "";
+        }
+
+        document.cookie = cname + "=" + cvalue + expires + ";path=/";
+      }
+
+      if (!window.getCookie("we_use_cookies")) {
+        setCookie("we_use_cookies", "seen", 364);
+        alert("WE USE COOKIES BTW IF U USE THIS SITE IT MEANS YOU AGREE THX");
+      }
+      </script>
+
+      <script type="text/javascript">
+        function setTaskCookie(task_id) {
+          setCookie("last_task_id", task_id);
+        }
+        $(document).ready(function() {
+          var x = window.getCookie("last_task_id");
+          console.log(x);
+
+          // $("#tomato_task").val(targetItem.project);
+        });
+      </script>
 
     <script type="text/javascript">
       window.csrf_token = <%= raw Poison.encode!(Plug.CSRFProtection.get_csrf_token()) %>;
