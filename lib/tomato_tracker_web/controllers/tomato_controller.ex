@@ -3,6 +3,8 @@ defmodule TomatoTrackerWeb.TomatoController do
   use Timex
 
   def create(conn, %{"tomato" => %{"task" => task, "summary" => summary, "datetime" => datetime}}) do
+    task = String.to_integer(task)
+
     case Timex.parse(datetime, "{YYYY}-{0M}-{0D} {h24}:{m}") do
       {:error, msg} ->
         StorageHandler.put_tomato(task, summary)

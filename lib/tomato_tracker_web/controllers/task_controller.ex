@@ -4,6 +4,8 @@ defmodule TomatoTrackerWeb.TaskController do
 
   def create(conn, %{"task" => %{"name" => name, "project" => project}}) do
     # TODO: create project if doesn't exist or display error?
+    project = String.to_integer(project)
+
     StorageHandler.put_task(name, project)
     IO.inspect(project)
 

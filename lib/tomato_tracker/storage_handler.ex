@@ -126,13 +126,8 @@ defmodule StorageHandler do
     end
   end
 
+  @spec put_task(String.t(), integer) :: :ok | {:error, String.t()}
   def put_task(name, project_id) do
-    project_id =
-      cond do
-        is_binary(project_id) -> String.to_integer(project_id)
-        true -> project_id
-      end
-
     case get_tasks() do
       [] ->
         PersistentStorage.put(:data, :tasks, [%{id: 1, name: name, project: project_id}])
@@ -144,6 +139,7 @@ defmodule StorageHandler do
     end
   end
 
+  @spec update_task(integer, String.t(), integer) :: :ok | {:error, String.t()}
   def update_task(id, new_name, new_project_id) do
     new_tasks =
       Enum.map(get_tasks(), fn task ->
@@ -209,13 +205,8 @@ defmodule StorageHandler do
     end
   end
 
+  @spec put_tomato(integer, String.t, Timex.Types.valid_datetime) :: :ok | {:error, String.t()}
   def put_tomato(task_id, summary \\ "", timestamp \\ Timex.now()) do
-    task_id =
-      cond do
-        is_binary(task_id) -> String.to_integer(task_id)
-        true -> task_id
-      end
-
     case get_tomatoes() do
       [] ->
         PersistentStorage.put(:data, :tomatoes, [
