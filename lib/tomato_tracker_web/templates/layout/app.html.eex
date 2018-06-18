@@ -182,8 +182,15 @@
           setCookie("last_task_id", task_id);
         }
         $(document).ready(function() {
-          var x = window.getCookie("last_task_id");
-          console.log(x);
+          var tomato_submit_button = $("#tomato_submit_button");
+          if (tomato_submit_button) {
+            tomato_submit_button.click(function() {
+              setCookie("last_task_id", $("#tomato_task").val(), 1);
+            });
+
+            var last_task_id = window.getCookie("last_task_id");
+            $("#tomato_task").val(last_task_id);
+          }
 
           // $("#tomato_task").val(targetItem.project);
         });
