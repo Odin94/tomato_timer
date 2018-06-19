@@ -3,7 +3,10 @@
 # TODO: Tasks aren't displayed in frontend; check if we get them in this get function, then check if frontend might be buggy
 defmodule StorageHandler do
   use Timex
+  alias TomatoTracker.Types
 
+  # [%{Types.project(), tasks: [%{Types.task(), tomatoes: [Types.tomato()]}]}]
+  @spec get_tomatoes_by_task_by_project(id: Types.id(), name: String.t()) :: [any]
   def get_tomatoes_by_task_by_project(id \\ nil, name \\ nil) do
     tomatoes_by_task = get_tomatoes_by_task()
 
@@ -205,7 +208,8 @@ defmodule StorageHandler do
     end
   end
 
-  @spec put_tomato(integer, String.t, Timex.Types.valid_datetime) :: :ok | {:error, String.t()}
+  @spec put_tomato(integer, String.t(), Timex.Types.valid_datetime()) ::
+          :ok | {:error, String.t()}
   def put_tomato(task_id, summary \\ "", timestamp \\ Timex.now()) do
     case get_tomatoes() do
       [] ->

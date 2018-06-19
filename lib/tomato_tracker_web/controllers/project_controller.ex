@@ -2,6 +2,8 @@ defmodule TomatoTrackerWeb.ProjectController do
   use TomatoTrackerWeb, :controller
 
   def index(conn, _params) do
+    IO.inspect(StorageHandler.get_tomatoes_by_task_by_project())
+
     render(
       conn,
       "index.html",
