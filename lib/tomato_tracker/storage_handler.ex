@@ -16,13 +16,7 @@ defmodule StorageHandler do
 
     get_projects()
     |> Enum.filter(fn proj ->
-      cond do
-        (id != nil and id != proj.id) or (name != nil and name != proj.name) ->
-          false
-
-        true ->
-          true
-      end
+      (id == nil or id == proj.id) and (name == nil or name == proj.name)
     end)
     |> Enum.map(fn proj ->
       Map.put(
@@ -41,13 +35,7 @@ defmodule StorageHandler do
 
     get_tasks()
     |> Enum.filter(fn task ->
-      cond do
-        (id != nil and id != task.id) or (name != nil and name != task.name) ->
-          false
-
-        true ->
-          true
-      end
+      (id == nil or id == task.id) and (name == nil or name == task.name)
     end)
     |> Enum.map(fn task ->
       Map.put(
@@ -68,14 +56,7 @@ defmodule StorageHandler do
 
       projects ->
         Enum.filter(projects, fn p ->
-          cond do
-            # TODO: is there a better way to express this conditional? Doesn't look too pretty
-            (name != nil and p.name != name) or (id != nil and p.id != id) ->
-              false
-
-            true ->
-              true
-          end
+          (name == nil or p.name == name) and (id == nil or p.id == id)
         end)
     end
   end
@@ -140,14 +121,7 @@ defmodule StorageHandler do
 
       tasks ->
         Enum.filter(tasks, fn t ->
-          cond do
-            # TODO: is there a better way to express this conditional? Doesn't look too pretty
-            (name != nil and t.name != name) or (id != nil and t.id != id) ->
-              false
-
-            true ->
-              true
-          end
+          (name == nil or t.name == name) and (id == nil or t.id == id)
         end)
     end
   end
@@ -247,15 +221,8 @@ defmodule StorageHandler do
 
       tomatoes ->
         Enum.filter(tomatoes, fn t ->
-          cond do
-            # TODO: is there a better way to express this conditional? Doesn't look too pretty
-            (task != nil and t.task != task) or (timestamp != nil and t.timestamp != timestamp) or
-                (id != nil and t.id != id) ->
-              false
-
-            true ->
-              true
-          end
+          (task == nil or t.task == task) and (timestamp == nil or t.timestamp == timestamp) and
+            (id == nil or t.id == id)
         end)
     end
   end
