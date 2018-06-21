@@ -6,7 +6,7 @@ defmodule TomatoTrackerWeb.TomatoController do
     task = String.to_integer(task)
 
     case Timex.parse(datetime, "{YYYY}-{0M}-{0D} {h24}:{m}") do
-      {:error, msg} ->
+      {:error, _} ->
         StorageHandler.put_tomato(task, summary)
 
       {:ok, parsed_time} ->

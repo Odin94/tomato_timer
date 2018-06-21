@@ -6,7 +6,7 @@ defmodule StorageHandler do
   alias TomatoTracker.Types
 
   # [%{Types.project(), tasks: [%{Types.task(), tomatoes: [Types.tomato()]}]}]
-  @spec get_tomatoes_by_task_by_project(id: Types.id(), name: String.t()) :: [any]
+  @spec get_tomatoes_by_task_by_project(Types.id() | nil, String.t() | nil) :: [any]
   def get_tomatoes_by_task_by_project(id \\ nil, name \\ nil) do
     tomatoes_by_task = get_tomatoes_by_task()
 
@@ -31,6 +31,7 @@ defmodule StorageHandler do
     end)
   end
 
+  @spec get_tomatoes_by_task(Types.id() | nil, String.t() | nil) :: [any]
   def get_tomatoes_by_task(id \\ nil, name \\ nil) do
     tomatoes = get_tomatoes()
 
@@ -55,6 +56,7 @@ defmodule StorageHandler do
     end)
   end
 
+  @spec get_projects(String.t() | nil, Types.id() | nil) :: [Types.project()]
   def get_projects(name \\ nil, id \\ nil) do
     case PersistentStorage.get(:data, :projects) do
       nil ->
@@ -74,6 +76,7 @@ defmodule StorageHandler do
     end
   end
 
+  @spec put_project(String.t()) :: :ok | {:error, String.t()}
   def put_project(name) do
     case get_projects() do
       [] ->
@@ -86,6 +89,7 @@ defmodule StorageHandler do
     end
   end
 
+  @spec update_project(Types.id(), String.t()) :: :ok | {:error, String.t()}
   def update_project(id, new_name) do
     new_projects =
       Enum.map(get_projects(), fn proj ->
@@ -99,6 +103,7 @@ defmodule StorageHandler do
     PersistentStorage.put(:data, :projects, new_projects)
   end
 
+  @spec delete_project(Types.id()) :: :ok | {:error, String.t()}
   def delete_project(id) do
     delete_tasks(nil, id)
 
@@ -110,6 +115,7 @@ defmodule StorageHandler do
     PersistentStorage.put(:data, :projects, new_projects)
   end
 
+  @spec get_tasks(String.t() | nil, Types.id() | nil) :: [Types.task()]
   def get_tasks(name \\ nil, id \\ nil) do
     case PersistentStorage.get(:data, :tasks) do
       nil ->
@@ -129,7 +135,7 @@ defmodule StorageHandler do
     end
   end
 
-  @spec put_task(String.t(), integer) :: :ok | {:error, String.t()}
+  @spec put_task(String.t(), Types.id()) :: :ok | {:error, String.t()}
   def put_task(name, project_id) do
     case get_tasks() do
       [] ->
@@ -142,7 +148,7 @@ defmodule StorageHandler do
     end
   end
 
-  @spec update_task(integer, String.t(), integer) :: :ok | {:error, String.t()}
+  @spec update_task(Types.id(), String.t(), Types.id()) :: :ok | {:error, String.t()}
   def update_task(id, new_name, new_project_id) do
     new_tasks =
       Enum.map(get_tasks(), fn task ->
@@ -156,8 +162,9 @@ defmodule StorageHandler do
     PersistentStorage.put(:data, :tasks, new_tasks)
   end
 
+  @spec delete_tasks(Types.id() | nil, Types.id() | nil) :: :ok | {:error, String.t()}
   def delete_tasks(id, project_id \\ nil)
-  def delete_tasks(id, project_id) when id == nil and project_id == nil, do: :err
+  def delete_tasks(nil, nil), do: {:err, "id and project id can't both be nil"}
 
   def delete_tasks(id, project_id) do
     # filter by task-id
@@ -188,6 +195,9 @@ defmodule StorageHandler do
     PersistentStorage.put(:data, :tasks, new_tasks)
   end
 
+  @spec get_tomatoes(Types.id() | nil, Timex.Types.valid_datetime() | nil, Types.id() | nil) :: [
+          Types.tomato()
+        ]
   def get_tomatoes(task \\ nil, timestamp \\ nil, id \\ nil) do
     case PersistentStorage.get(:data, :tomatoes) do
       nil ->
@@ -208,7 +218,7 @@ defmodule StorageHandler do
     end
   end
 
-  @spec put_tomato(integer, String.t(), Timex.Types.valid_datetime()) ::
+  @spec put_tomato(Types.id(), String.t(), Timex.Types.valid_datetime()) ::
           :ok | {:error, String.t()}
   def put_tomato(task_id, summary \\ "", timestamp \\ Timex.now()) do
     case get_tomatoes() do
@@ -237,8 +247,9 @@ defmodule StorageHandler do
     end
   end
 
+  @spec delete_tomatoes(Types.id(), Types.id()) :: :ok | {:error, String.t()}
   def delete_tomatoes(id, task_id \\ nil)
-  def delete_tomatoes(id, task_id) when id == nil and task_id == nil, do: :err
+  def delete_tomatoes(nil, nil), do: :err
 
   def delete_tomatoes(id, task_id) do
     new_tomatoes =

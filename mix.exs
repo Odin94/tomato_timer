@@ -41,6 +41,7 @@ defmodule TomatoTracker.Mixfile do
       {:persistent_storage, "~> 0.10.0", github: "cellulose/persistent_storage"},
       {:timex, "~> 3.1"},
       {:navigation_history, "~> 0.0"},
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
     ]
   end
 end
