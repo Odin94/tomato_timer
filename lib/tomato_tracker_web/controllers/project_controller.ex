@@ -17,11 +17,17 @@ defmodule TomatoTrackerWeb.ProjectController do
   end
 
   def create(conn, %{"project" => %{"name" => name}}) do
-    StorageHandler.put_project(name)
+    case StorageHandler.put_project(name) do
+      :ok ->
+        conn
+        |> put_flash(:info, "Created project #{name}.")
+        |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
 
-    conn
-    |> put_flash(:info, "Created project #{name}.")
-    |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
+      {:error, msg} ->
+        conn
+        |> put_flash(:error, "Creating project failed: #{msg}")
+        |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
+    end
   end
 
   def show(conn, %{"id" => project_id}) do
@@ -41,11 +47,18 @@ defmodule TomatoTrackerWeb.ProjectController do
 
   def update(conn, %{"id" => project_id, "project" => %{"name" => new_project_name}}) do
     project_id = String.to_integer(project_id)
-    StorageHandler.update_project(project_id, new_project_name)
 
-    conn
-    |> put_flash(:info, "Updated project #{new_project_name}.")
-    |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
+    case StorageHandler.update_project(project_id, new_project_name) do
+      :ok ->
+        conn
+        |> put_flash(:info, "Updated project #{new_project_name}.")
+        |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
+
+      {:error, msg} ->
+        conn
+        |> put_flash(:error, "Failed to update project: #{msg}")
+        |> redirect(to: NavigationHistory.last_path(conn, default: "/"))
+    end
   end
 
   def delete(conn, %{"id" => project_id}) do

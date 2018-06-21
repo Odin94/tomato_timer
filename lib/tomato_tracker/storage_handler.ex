@@ -83,24 +83,37 @@ defmodule StorageHandler do
         PersistentStorage.put(:data, :projects, [%{id: 1, name: name}])
 
       projects ->
-        # TODO: consider not allowing duplicate names
-        new_projects = [%{id: List.first(projects).id + 1, name: name} | projects]
-        PersistentStorage.put(:data, :projects, new_projects)
+        case Enum.any?(projects, fn proj -> name == proj.name end) do
+          true ->
+            {:error, "Project with name '#{name}' already exists."}
+
+          false ->
+            new_projects = [%{id: List.first(projects).id + 1, name: name} | projects]
+            PersistentStorage.put(:data, :projects, new_projects)
+        end
     end
   end
 
   @spec update_project(Types.id(), String.t()) :: :ok | {:error, String.t()}
   def update_project(id, new_name) do
-    new_projects =
-      Enum.map(get_projects(), fn proj ->
-        if proj.id == id do
-          %{proj | name: new_name}
-        else
-          proj
-        end
-      end)
+    existing_projects = get_projects()
 
-    PersistentStorage.put(:data, :projects, new_projects)
+    case Enum.any?(existing_projects, fn proj -> proj.name == new_name end) do
+      true ->
+        {:error, "Project with name #{new_name} already exists."}
+
+      false ->
+        new_projects =
+          Enum.map(existing_projects, fn proj ->
+            if proj.id == id do
+              %{proj | name: new_name}
+            else
+              proj
+            end
+          end)
+
+        PersistentStorage.put(:data, :projects, new_projects)
+    end
   end
 
   @spec delete_project(Types.id()) :: :ok | {:error, String.t()}
@@ -137,29 +150,54 @@ defmodule StorageHandler do
 
   @spec put_task(String.t(), Types.id()) :: :ok | {:error, String.t()}
   def put_task(name, project_id) do
-    case get_tasks() do
+    case get_projects(nil, project_id) do
       [] ->
-        PersistentStorage.put(:data, :tasks, [%{id: 1, name: name, project: project_id}])
+        {:error, "Project with id #{project_id} doesn't exist."}
 
-      tasks ->
-        # TODO: consider not allowing duplicate names
-        new_tasks = [%{id: List.first(tasks).id + 1, name: name, project: project_id} | tasks]
-        PersistentStorage.put(:data, :tasks, new_tasks)
+      projects ->
+        case get_tasks() do
+          [] ->
+            PersistentStorage.put(:data, :tasks, [%{id: 1, name: name, project: project_id}])
+
+          tasks ->
+            case Enum.any?(tasks, fn task -> project_id == task.project and name == task.name end) do
+              true ->
+                {:error, "Task with name '#{name}' already exists for this project."}
+
+              false ->
+                new_tasks = [
+                  %{id: List.first(tasks).id + 1, name: name, project: project_id} | tasks
+                ]
+
+                PersistentStorage.put(:data, :tasks, new_tasks)
+            end
+        end
     end
   end
 
   @spec update_task(Types.id(), String.t(), Types.id()) :: :ok | {:error, String.t()}
   def update_task(id, new_name, new_project_id) do
-    new_tasks =
-      Enum.map(get_tasks(), fn task ->
-        if task.id == id do
-          %{task | name: new_name, project: new_project_id}
-        else
-          task
-        end
-      end)
+    existing_tasks = get_tasks()
 
-    PersistentStorage.put(:data, :tasks, new_tasks)
+    case Enum.any?(existing_tasks, fn task ->
+           task.name == new_name and task.project == new_project_id
+         end) do
+      true ->
+        {:error,
+         "Task with name '#{new_name}' already exists for project with id #{new_project_id}."}
+
+      false ->
+        new_tasks =
+          Enum.map(get_tasks(), fn task ->
+            if task.id == id do
+              %{task | name: new_name, project: new_project_id}
+            else
+              task
+            end
+          end)
+
+        PersistentStorage.put(:data, :tasks, new_tasks)
+    end
   end
 
   @spec delete_tasks(Types.id() | nil, Types.id() | nil) :: :ok | {:error, String.t()}
