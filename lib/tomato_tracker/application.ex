@@ -1,4 +1,7 @@
 defmodule TomatoTracker.Application do
+  @@moduledoc """
+  Unchanged Phoenix application module
+  """
   use Application
 
   # See https://hexdocs.pm/elixir/Application.html

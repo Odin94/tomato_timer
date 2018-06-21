@@ -42,6 +42,7 @@ defmodule TomatoTracker.Mixfile do
       {:timex, "~> 3.1"},
       {:navigation_history, "~> 0.0"},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+      {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
     ]
   end
 end

@@ -2,6 +2,10 @@
 
 # TODO: Tasks aren't displayed in frontend; check if we get them in this get function, then check if frontend might be buggy
 defmodule StorageHandler do
+  @moduledoc """
+    Stores and retrieves tomatoes, tasks, projects and combinations of them to/from flat file storage.
+  """
+
   use Timex
   alias TomatoTracker.Types
 
@@ -209,7 +213,7 @@ defmodule StorageHandler do
     new_tasks =
       if id != nil do
         Enum.filter(get_tasks(), fn task ->
-          if(task.id != id) do
+          if task.id != id do
             true
           else
             delete_tomatoes(nil, id)
@@ -220,7 +224,7 @@ defmodule StorageHandler do
         # filter by project
       else
         Enum.filter(get_tasks(), fn task ->
-          if(task.project != project_id) do
+          if task.project != project_id do
             true
           else
             IO.puts("delete tomatoes!!!!!!!!!!")
@@ -303,7 +307,6 @@ defmodule StorageHandler do
         end)
       end
 
-    IO.inspect(new_tomatoes)
     PersistentStorage.put(:data, :tomatoes, new_tomatoes)
   end
 end
