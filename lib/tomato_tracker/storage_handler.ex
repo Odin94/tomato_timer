@@ -88,17 +88,22 @@ defmodule StorageHandler do
         {:error, "Project with name #{new_name} already exists."}
 
       false ->
-        new_projects =
-          Enum.map(existing_projects, fn proj ->
-            if proj.id == id do
-              %{proj | name: new_name}
-            else
-              proj
-            end
-          end)
-
-        PersistentStorage.put(:data, :projects, new_projects)
+        execute_update_project(id, new_name, existing_projects)
     end
+  end
+
+  @spec execute_update_project(Types.id(), String.t(), [Types.project]) :: :ok | {:error, String.t()}
+  defp execute_update_project(id, new_name, existing_projects) do
+    new_projects =
+      Enum.map(existing_projects, fn proj ->
+        if proj.id == id do
+          %{proj | name: new_name}
+        else
+          proj
+        end
+      end)
+
+    PersistentStorage.put(:data, :projects, new_projects)
   end
 
   @spec delete_project(Types.id()) :: :ok | {:error, String.t()}
@@ -132,7 +137,7 @@ defmodule StorageHandler do
       [] ->
         {:error, "Project with id #{project_id} doesn't exist."}
 
-      projects ->
+      _projects ->
         case get_tasks() do
           [] ->
             PersistentStorage.put(:data, :tasks, [%{id: 1, name: name, project: project_id}])
@@ -165,17 +170,22 @@ defmodule StorageHandler do
          "Task with name '#{new_name}' already exists for project with id #{new_project_id}."}
 
       false ->
-        new_tasks =
-          Enum.map(get_tasks(), fn task ->
-            if task.id == id do
-              %{task | name: new_name, project: new_project_id}
-            else
-              task
-            end
-          end)
-
-        PersistentStorage.put(:data, :tasks, new_tasks)
+        execute_update_task(id, new_name, new_project_id)
     end
+  end
+
+  @spec execute_update_task(Types.id(), String.t(), Types.id()) :: :ok | {:error, String.t()}
+  defp execute_update_task(id, new_name, new_project_id) do
+    new_tasks =
+      Enum.map(get_tasks(), fn task ->
+        if task.id == id do
+          %{task | name: new_name, project: new_project_id}
+        else
+          task
+        end
+      end)
+
+    PersistentStorage.put(:data, :tasks, new_tasks)
   end
 
   @spec delete_tasks(Types.id() | nil, Types.id() | nil) :: :ok | {:error, String.t()}
