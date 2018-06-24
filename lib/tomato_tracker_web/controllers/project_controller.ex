@@ -2,15 +2,13 @@ defmodule TomatoTrackerWeb.ProjectController do
   use TomatoTrackerWeb, :controller
 
   def index(conn, _params) do
-    case QuotaTracker.set_interval_length(7, :days) do
-      :ok ->
-        IO.puts("ok")
-
-      {:error, msg} ->
-        IO.puts(msg)
-    end
+    QuotaTracker.set_interval_length(1, :weeks)
 
     QuotaTracker.get_interval_length()
+    |> IO.inspect()
+    IO.puts("++++++++++++++++++")
+
+    QuotaTracker.update_quota_progress()
 
     render(
       conn,

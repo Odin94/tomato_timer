@@ -39,7 +39,7 @@ defmodule TomatoTracker.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:persistent_storage, "~> 0.10.0", github: "cellulose/persistent_storage"},
-      {:timex, "~> 3.1"},
+      {:timex, "~> 3.3"},
       {:navigation_history, "~> 0.0"},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},

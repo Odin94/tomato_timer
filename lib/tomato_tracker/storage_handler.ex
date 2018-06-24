@@ -91,7 +91,8 @@ defmodule StorageHandler do
     end
   end
 
-  @spec execute_update_project(Types.id(), String.t(), [Types.project]) :: :ok | {:error, String.t()}
+  @spec execute_update_project(Types.id(), String.t(), [Types.project()]) ::
+          :ok | {:error, String.t()}
   defp execute_update_project(id, new_name, existing_projects) do
     new_projects =
       Enum.map(existing_projects, fn proj ->
@@ -265,7 +266,7 @@ defmodule StorageHandler do
     end
   end
 
-  @spec delete_tomatoes(Types.id(), Types.id()) :: :ok | {:error, String.t()}
+  @spec delete_tomatoes(Types.id() | nil, Types.id() | nil) :: :ok | {:error, String.t()}
   def delete_tomatoes(id, task_id \\ nil)
   def delete_tomatoes(nil, nil), do: {:error, "id and task_id can't both be nil."}
 
