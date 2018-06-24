@@ -6,12 +6,16 @@ defmodule QuotaTracker do
   alias TomatoTracker.Types
   import Timex.Duration, only: [to_seconds: 1, to_seconds: 2]
 
-  # @spec get_quota_progress() :: non_neg_integer | nil
+  def set_default_if_empty() do
+    # TODO: check if quota_current, quota_target, quota_interval and quota_start_time exist & set a default if they don't
+  end
+
+  @spec get_quota_progress() :: non_neg_integer | nil
   def get_quota_progress() do
     PersistentStorage.get(:data, :quota_current)
   end
 
-  # @spec update_quota_progress(non_neg_integer) :: :ok | {:error, String.t()}
+  @spec update_quota_progress() :: :ok | {:error, String.t()}
   def update_quota_progress() do
     update_start_time()
 
@@ -42,7 +46,11 @@ defmodule QuotaTracker do
   end
 
   def update_start_time() do
-    # TODO: check if start_time > start_time + interval, update if needed
+    if in_current_interval?(Timex.now()) do
+      IO.puts("MOVING TO NEXT INTERVAL")
+      set_start_time(Timex.shift(get_start_time(), get_interval_length()))
+      update_start_time()
+    end
   end
 
   @spec get_start_time() :: Timex.Types.valid_datetime() | nil
@@ -60,6 +68,8 @@ defmodule QuotaTracker do
     PersistentStorage.get(:data, :quota_interval)
   end
 
+  # NOTE: setting this to Timex.now() will cause update_start_time to recognize the current date as out-of-interval and set it to the next interval
+  # -> use Timex.shift(Timex.now, hours: 1)
   @spec set_interval_length(non_neg_integer, Types.interval_unit()) :: :ok | {:error, String.t()}
   def set_interval_length(amount, unit) do
     PersistentStorage.put(:data, :quota_interval, [{unit, amount}])

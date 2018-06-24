@@ -7,6 +7,7 @@ defmodule TomatoTrackerWeb.ProjectController do
     QuotaTracker.get_interval_length()
     |> IO.inspect()
     IO.puts("++++++++++++++++++")
+    IO.puts(QuotaTracker.set_start_time(Timex.shift(Timex.now(), hours: 1)))
 
     QuotaTracker.update_quota_progress()
 
