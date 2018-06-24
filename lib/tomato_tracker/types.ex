@@ -11,4 +11,8 @@ defmodule TomatoTracker.Types do
   @type tomato :: %{id: id, task: id, summary: String.t(), timestamp: Types.valid_datetime()}
   @type task :: %{id: id, name: String.t(), project: id}
   @type project :: %{id: id, name: String.t()}
+
+  # quota tracker types
+  @type interval_unit :: :days | :weeks | :months | :years
+  @type quota_interval :: %{amount: non_neg_integer, unit: interval_unit}
 end

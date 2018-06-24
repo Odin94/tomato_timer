@@ -1,6 +1,5 @@
 # Storage is a reversed list; list.first() is the element with the highest ID / latest element
 
-# TODO: Tasks aren't displayed in frontend; check if we get them in this get function, then check if frontend might be buggy
 defmodule StorageHandler do
   @moduledoc """
     Stores and retrieves tomatoes, tasks, projects and combinations of them to/from flat file storage.
@@ -190,7 +189,7 @@ defmodule StorageHandler do
 
   @spec delete_tasks(Types.id() | nil, Types.id() | nil) :: :ok | {:error, String.t()}
   def delete_tasks(id, project_id \\ nil)
-  def delete_tasks(nil, nil), do: {:err, "id and project id can't both be nil"}
+  def delete_tasks(nil, nil), do: {:error, "id and project_id can't both be nil"}
 
   def delete_tasks(id, project_id) do
     # filter by task-id
@@ -268,7 +267,7 @@ defmodule StorageHandler do
 
   @spec delete_tomatoes(Types.id(), Types.id()) :: :ok | {:error, String.t()}
   def delete_tomatoes(id, task_id \\ nil)
-  def delete_tomatoes(nil, nil), do: :err
+  def delete_tomatoes(nil, nil), do: {:error, "id and task_id can't both be nil."}
 
   def delete_tomatoes(id, task_id) do
     new_tomatoes =

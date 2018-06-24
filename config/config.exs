@@ -20,7 +20,7 @@ config :logger, :console,
 # Configures persistent_storage's tables (each table is one file)
 config :persistent_storage,
   tables: [
-    config: [path: "./storage/config"],
+    config: [path: "./storage/config"],  # TODO: find out why config isn't accepted
     data: [path: "./storage/data"]
   ]
 
