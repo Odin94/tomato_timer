@@ -7,7 +7,30 @@ defmodule QuotaTracker do
   import Timex.Duration, only: [to_seconds: 1, to_seconds: 2]
 
   def set_default_if_empty() do
-    # TODO: check if quota_current, quota_target, quota_interval and quota_start_time exist & set a default if they don't
+    if get_start_time() == nil do
+      IO.puts("No start time found, using default of now + 1h")
+      set_start_time()
+    end
+
+    if get_interval_length() == nil do
+      IO.puts("No interval length found, using default of 1 week")
+      set_interval_length(1, :weeks)
+    end
+
+    if get_target() == nil do
+      IO.puts("No target found, using default of 21 tomatoes")
+      set_target(21)
+    end
+
+    if get_target() == nil do
+      IO.puts("No target found, using default of 21 tomatoes")
+      set_target(21)
+    end
+
+    if get_quota_progress() == nil do
+      IO.puts("No quota progress found, updating progress")
+      update_quota_progress()
+    end
   end
 
   @spec get_quota_progress() :: non_neg_integer | nil
@@ -47,7 +70,7 @@ defmodule QuotaTracker do
 
   def update_start_time() do
     if in_current_interval?(Timex.now()) do
-      IO.puts("MOVING TO NEXT INTERVAL")
+      IO.puts("Moving to next interval")
       set_start_time(Timex.shift(get_start_time(), get_interval_length()))
       update_start_time()
     end
@@ -58,8 +81,10 @@ defmodule QuotaTracker do
     PersistentStorage.get(:data, :quota_start_time)
   end
 
+  # NOTE: setting this to Timex.now() will cause update_start_time to recognize the current date as out-of-interval and set it to the next interval
+  # -> use Timex.shift(Timex.now, hours: 1)
   @spec set_start_time(Timex.Types.valid_datetime()) :: :ok | {:error, String.t()}
-  def set_start_time(start_time) do
+  def set_start_time(start_time \\ Timex.shift(Timex.now(), hours: 1)) do
     PersistentStorage.put(:data, :quota_start_time, start_time)
   end
 
@@ -68,8 +93,6 @@ defmodule QuotaTracker do
     PersistentStorage.get(:data, :quota_interval)
   end
 
-  # NOTE: setting this to Timex.now() will cause update_start_time to recognize the current date as out-of-interval and set it to the next interval
-  # -> use Timex.shift(Timex.now, hours: 1)
   @spec set_interval_length(non_neg_integer, Types.interval_unit()) :: :ok | {:error, String.t()}
   def set_interval_length(amount, unit) do
     PersistentStorage.put(:data, :quota_interval, [{unit, amount}])
