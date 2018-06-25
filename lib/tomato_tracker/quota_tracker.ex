@@ -33,6 +33,12 @@ defmodule QuotaTracker do
     end
   end
 
+  @spec update_and_get_quota_progress() :: non_neg_integer | nil
+  def update_and_get_quota_progress() do
+    update_quota_progress()
+    get_quota_progress()
+  end
+
   @spec get_quota_progress() :: non_neg_integer | nil
   def get_quota_progress() do
     PersistentStorage.get(:data, :quota_current)
@@ -51,7 +57,7 @@ defmodule QuotaTracker do
     PersistentStorage.put(:data, :quota_current, current_tomato_count)
   end
 
-  @spec in_current_interval?(non_neg_integer | float) :: boolean | {:error, String.t()}
+  @spec in_current_interval?(Timex.Types.valid_datetime()) :: boolean | {:error, String.t()}
   defp in_current_interval?(timestamp) do
     start_time = get_start_time()
 

@@ -2,20 +2,13 @@ defmodule TomatoTrackerWeb.ProjectController do
   use TomatoTrackerWeb, :controller
 
   def index(conn, _params) do
-    QuotaTracker.set_interval_length(1, :weeks)
-
-    QuotaTracker.get_interval_length()
-    |> IO.inspect()
-    IO.puts("++++++++++++++++++")
-    IO.puts(QuotaTracker.set_start_time(Timex.shift(Timex.now(), hours: 1)))
-
-    QuotaTracker.update_quota_progress()
-
     render(
       conn,
       "index.html",
       projects: StorageHandler.get_tomatoes_by_task_by_project(),
-      tasks: StorageHandler.get_tasks()
+      tasks: StorageHandler.get_tasks(),
+      quota_target: QuotaTracker.get_target(),
+      quota_progress: QuotaTracker.update_and_get_quota_progress()
     )
   end
 

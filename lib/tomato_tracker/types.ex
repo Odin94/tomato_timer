@@ -14,5 +14,5 @@ defmodule TomatoTracker.Types do
 
   # quota tracker types
   @type interval_unit :: :days | :weeks | :months | :years
-  @type quota_interval :: %{amount: non_neg_integer, unit: interval_unit}
+  @type quota_interval :: [{interval_unit, non_neg_integer}]
 end
