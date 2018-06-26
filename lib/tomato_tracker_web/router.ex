@@ -42,7 +42,7 @@ defmodule TomatoTrackerWeb.Router do
   scope "/quota_tracker", TomatoTrackerWeb do
     pipe_through(:browser)
 
-    post("/", QuotaTrackerController, :update)
+    put("/update", QuotaTrackerController, :update)
   end
 
   # Other scopes may use custom stacks.

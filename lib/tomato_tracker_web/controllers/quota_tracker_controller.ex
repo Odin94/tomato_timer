@@ -2,10 +2,12 @@ defmodule TomatoTrackerWeb.QuotaTrackerController do
   use TomatoTrackerWeb, :controller
 
   def update(conn, %{
-        "quota_target" => quota_target,
-        "start_time" => start_time,
-        "interval_amount" => interval_amount,
-        "interval_unit" => interval_unit
+        "quota_tracker" => %{
+          "quota_target" => quota_target,
+          "start_time" => start_time,
+          "interval_amount" => interval_amount,
+          "interval_unit" => interval_unit
+        }
       }) do
     interval_unit = String.to_atom(interval_unit)
     interval_amount = String.to_integer(interval_amount)
@@ -15,6 +17,12 @@ defmodule TomatoTrackerWeb.QuotaTrackerController do
          :ok <- QuotaTracker.set_start_time(parsed_time),
          :ok <- QuotaTracker.set_interval_length(interval_amount, interval_unit),
          :ok <- QuotaTracker.set_target(quota_target) do
+
+      IO.inspect(QuotaTracker.get_start_time)
+      IO.inspect(QuotaTracker.get_interval_length)
+      IO.inspect(QuotaTracker.get_target)
+      IO.inspect(QuotaTracker.get_quota_progress)
+
       conn
       |> put_flash(:info, "Updated quota tracker config.")
       |> redirect(to: NavigationHistory.last_path(conn, default: "/"))

@@ -75,7 +75,7 @@ defmodule QuotaTracker do
   end
 
   def update_start_time() do
-    if in_current_interval?(Timex.now()) do
+    if !in_current_interval?(Timex.now()) do
       IO.puts("Moving to next interval")
       set_start_time(Timex.shift(get_start_time(), get_interval_length()))
       update_start_time()
@@ -97,6 +97,29 @@ defmodule QuotaTracker do
   @spec get_interval_length() :: Types.quota_interval() | nil
   def get_interval_length() do
     PersistentStorage.get(:data, :quota_interval)
+  end
+
+  @spec get_interval_length_separated() :: {String.t(), non_neg_integer} | nil
+  def get_interval_length_separated() do
+    case PersistentStorage.get(:data, :quota_interval) do
+      nil ->
+        nil
+
+      interval ->
+        quota_interval_unit =
+          interval
+          |> Keyword.keys()
+          |> List.first()
+          |> Atom.to_string()
+
+        quota_interval_amount =
+          interval
+          |> Keyword.keys()
+          |> List.first()
+          |> (&Keyword.get(interval, &1)).()
+
+        {quota_interval_unit, quota_interval_amount}
+    end
   end
 
   @spec set_interval_length(non_neg_integer, Types.interval_unit()) :: :ok | {:error, String.t()}

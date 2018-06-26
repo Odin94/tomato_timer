@@ -37,11 +37,6 @@
 <!-- List of projects -->
 <%= render TomatoTrackerWeb.SharedView, "_projects.html", assigns %>
 
-<!-- Floating elements -->
-<div class="quota-progress">
-    <%= "#{@quota_progress} / #{@quota_target}" %>
-</div>
-
 <link rel="stylesheet" href="<%= static_path(@conn, "/css/flatpickr.min.css") %>">
 <script src="<%= static_path(@conn, "/js/flatpickr.min.js") %>"></script>
 <script>
@@ -50,3 +45,6 @@
     dateFormat: "Y-m-d H:i",
   });
 </script>
+
+<!-- Floating elements -->
+<%= render TomatoTrackerWeb.SharedView, "_floating_quota_tracker.html", assigns %>

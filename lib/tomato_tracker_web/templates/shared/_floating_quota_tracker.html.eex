@@ -1,0 +1,9 @@
+<div class="quota-progress">
+  <div>
+    <%= "#{@quota_progress} / #{@quota_target}" %>
+  </div>
+  <div class="btn btn-xs btn-default edit-button" onclick="$('#quota-tracker-edit-modal').modal('show');">
+    <i class="far fa-edit text-warning"></i>
+  </div>
+</div>
+<%= render TomatoTrackerWeb.SharedView, "_quota_tracker_edit_modal.html", assigns %>
