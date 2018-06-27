@@ -74,8 +74,9 @@ defmodule QuotaTracker do
     PersistentStorage.put(:data, :quota_target, target)
   end
 
+  # TODO: make this failsafe against dates in the future
   def update_start_time() do
-    if !in_current_interval?(Timex.now()) do
+    unless in_current_interval?(Timex.now()) do
       IO.puts("Moving to next interval")
       set_start_time(Timex.shift(get_start_time(), get_interval_length()))
       update_start_time()
