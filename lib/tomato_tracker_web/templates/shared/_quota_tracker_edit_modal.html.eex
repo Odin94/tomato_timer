@@ -51,5 +51,6 @@
   flatpickr("#quota_tracker_start_time", {
     enableTime: true,
     dateFormat: "Y-m-d H:i",
+    defaultDate: "<%= @quota_start_time %>"
   });
 </script>
