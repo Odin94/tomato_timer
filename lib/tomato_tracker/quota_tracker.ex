@@ -76,7 +76,7 @@ defmodule QuotaTracker do
 
   # TODO: make this failsafe against dates in the future
   def update_start_time() do
-    unless in_current_interval?(Timex.now()) do
+    if Timex.after?(Timex.now(), Timex.shift(get_start_time(), get_interval_length())) do
       IO.puts("Moving to next interval")
       set_start_time(Timex.shift(get_start_time(), get_interval_length()))
       update_start_time()
