@@ -2,6 +2,7 @@ defmodule TomatoTrackerWeb.ProjectController do
   use TomatoTrackerWeb, :controller
 
   def index(conn, _params) do
+    IO.inspect Backup.restore("./backup/P1971Y3M23D")
     {quota_interval_unit, quota_interval_amount} = QuotaTracker.get_interval_length_separated()
 
     render(

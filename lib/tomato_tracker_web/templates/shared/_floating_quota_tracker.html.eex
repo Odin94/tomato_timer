@@ -2,6 +2,10 @@
   <div>
     <%= "#{@quota_progress} / #{@quota_target}" %>
   </div>
+  <div>
+    <%= "#{@quota_interval_amount} #{@quota_interval_unit}" %>
+  </div>
+  <br>
   <div class="btn btn-xs btn-default edit-button" onclick="$('#quota-tracker-edit-modal').modal('show');">
     <i class="far fa-edit text-warning"></i>
   </div>

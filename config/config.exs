@@ -10,7 +10,8 @@ config :tomato_tracker, TomatoTrackerWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "AdfXy7So1mprVeQLIjLWvKILLaPKGGgG1YAEa2oMNyveSD5lYPfJTQGvQDh28mjU",
   render_errors: [view: TomatoTrackerWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: TomatoTracker.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: TomatoTracker.PubSub, adapter: Phoenix.PubSub.PG2],
+  backup_path: "./backup"
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -20,7 +21,8 @@ config :logger, :console,
 # Configures persistent_storage's tables (each table is one file)
 config :persistent_storage,
   tables: [
-    config: [path: "./storage/config"],  # TODO: find out why config isn't accepted
+    # TODO: find out why config isn't accepted
+    config: [path: "./storage/config"],
     data: [path: "./storage/data"]
   ]
 
